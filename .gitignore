@@ -2,6 +2,7 @@
 /.buildpath
 /.project
 /.idea
+/.phpintel
 /node_modules
 /composer.phar
 /build/logs/*

@@ -1,0 +1,9 @@
+oro_menu_config:
+    items:
+        issue_list:
+            label: Issues
+            route: app_issue_index
+    tree:
+        application_menu:
+            children:
+                issue_list: ~

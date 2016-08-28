@@ -1,0 +1,70 @@
+datagrid:
+    app-issue-grid:
+        source:
+            type: orm
+            query:
+                select:
+                    - issue.id
+                    - issue.code
+                    - issue.summary
+                    - issue.description
+                    - priority.label AS issuePriority
+                from:
+                    - { table: IssueBundle:Issue, alias: issue }
+                join:
+                    left:
+                        - { join: issue.priority, alias: priority }
+                        - { join: issue.resolution, alias: resolution }
+                        - { join: issue.reporter, alias: reporter }
+                        - { join: issue.asignee, alias: asignee }
+        columns:
+            code:
+                label: Code
+                frontend_type: integer
+            summary:
+                label: Summary
+            description:
+                label: Description
+            type:
+                label: Type
+                frontend_type: integer
+            status:
+                label: Status
+                frontend_type: integer
+            resolution:
+                label: Resolution
+                frontend_type: integer
+            reporter:
+                label: Reporter
+                frontend_type: integer
+            asignee:
+                label: Asignee
+                frontend_type: integer
+            priority:
+                label: Priority
+        sorters:
+            columns:
+                code:
+                    data_name: issue.code
+                summary:
+                    data_name: issue.summary
+                description:
+                    data_name: issue.description
+                priority:
+                    data_name: priority.priority
+            default:
+                priority: DESC
+        filters:
+            columns:
+                code:
+                    type: number
+                    data_name: issue.code
+                summary:
+                    type: string
+                    data_name: issue.summery
+                description:
+                    type: string
+                    data_name: issue.description
+                issuePriority:
+                    type: string
+                    data_name: priority.label

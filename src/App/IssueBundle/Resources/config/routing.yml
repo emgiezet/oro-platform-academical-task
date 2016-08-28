@@ -1,0 +1,3 @@
+app_issue:
+   type:     annotation
+   resource: "@IssueBundle/Controller/"
