@@ -2,3 +2,11 @@
 
 {% set gridName = 'app-issue-grid' %}
 {% set pageTitle = 'Issue' %}
+{% block navButtons %}
+    <div class="btn-group">
+        {{ UI.addButton({
+            'path': path('app_issue_create'),
+            'entity_label': 'Create a Issue',
+        }) }}
+    </div>
+{% endblock %}

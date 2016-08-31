@@ -6,13 +6,21 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
 use Oro\Bundle\UserBundle\Entity\User;
+use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
+
+use Oro\Bundle\DataAuditBundle\Metadata\Annotation as Oro;
 
 /**
  * Issue.
  *
  * @ORM\Table(name="app_issue")
  * @ORM\Entity(repositoryClass="App\IssueBundle\Entity\IssueRepository")
- * @Config
+ * @Oro\Loggable
+ * @Config(
+ *  defaultValues={
+ *      "dataaudit"={"auditable"=true}
+ *  }
+ * )
  */
 class Issue
 {
@@ -27,22 +35,6 @@ class Issue
         self::TYPE_SUBTASK =>'Subtask',
         self::TYPE_STORY => 'Story',
     );
-
-    /**
-     * @return array
-     */
-    public static function getTypeArray()
-    {
-        return self::$typeArray;
-    }
-
-    /**
-     * @param array $typeArray
-     */
-    public static function setTypeArray($typeArray)
-    {
-        self::$typeArray = $typeArray;
-    }
 
     /**
      * @var int
@@ -121,6 +113,11 @@ class Issue
      * @var ArrayCollection
      *
      * @ORM\ManyToMany(targetEntity="App\IssueBundle\Entity\Issue")
+     * @ORM\JoinTable( name="app_issue_related",
+     *     joinColumns={@ORM\JoinColumn(name="issue_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="related_id", referencedColumnName="id")}
+     *      )
+     * )
      */
     private $relatedIssues;
 
@@ -165,6 +162,15 @@ class Issue
      * @ORM\Column(name="updated", type="datetime")
      */
     private $updated;
+
+
+    public function __construct()
+    {
+        $this->relatedIssues = new ArrayCollection();
+        $this->collaborators = new ArrayCollection();
+        $this->created = new \DateTime('now');
+
+    }
 
     /**
      * Get id.
@@ -432,5 +438,19 @@ class Issue
         $this->updated = $updated;
     }
 
-    
+    /**
+     * @return array
+     */
+    public static function getTypeArray()
+    {
+        return self::$typeArray;
+    }
+
+    /**
+     * @param array $typeArray
+     */
+    public static function setTypeArray($typeArray)
+    {
+        self::$typeArray = $typeArray;
+    }
 }

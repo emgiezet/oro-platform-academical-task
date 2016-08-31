@@ -1,5 +1,5 @@
 <?php
-namespace App\IssueBundle\Migrations\Data\ORM;
+namespace App\IssueBundle\Migrations\Data\Demo;
 
 use App\IssueBundle\Entity\Issue;
 use App\IssueBundle\Entity\Priority;
