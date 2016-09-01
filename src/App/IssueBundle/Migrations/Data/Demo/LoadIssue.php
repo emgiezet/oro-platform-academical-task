@@ -1,41 +1,36 @@
 <?php
+
 namespace App\IssueBundle\Migrations\Data\Demo;
 
 use App\IssueBundle\Entity\Issue;
 use App\IssueBundle\Entity\Priority;
 use App\IssueBundle\Entity\Resolution;
-use Doctrine\Common\DataFixtures\FixtureInterface;
+use Doctrine\Common\DataFixtures\AbstractFixture;
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
-class LoadIssue implements FixtureInterface
+class LoadIssue extends AbstractFixture implements OrderedFixtureInterface
 {
+    public function getOrder()
+    {
+        return 20;
+    }
+
     public function load(ObjectManager $manager)
     {
-//        $priority      = new Priority();
-//        $resolution    = new Resolution();
-//        $majorPriority = new Issue();
-//
-//        $majorPriority->setLabel('major');
-//        $manager->persist($majorPriority);
-//
-//        $importantTask = new Issue();
-//        $importantTask->setSubject('Important task');
-//        $importantTask->setDescription('This is an important task');
-//        $importantTask->setDueDate(new \DateTime('+1 week'));
-//        $importantTask->setPriority($majorPriority);
-//        $manager->persist($importantTask);
-//
-//        $minorPriority = new Priority();
-//        $minorPriority->setLabel('minor');
-//        $manager->persist($minorPriority);
-//
-//        $unimportantTask = new Task();
-//        $unimportantTask->setSubject('Unimportant task');
-//        $unimportantTask->setDescription('This is a not so important task');
-//        $unimportantTask->setDueDate(new \DateTime('+2 weeks'));
-//        $unimportantTask->setPriority($minorPriority);
-//        $manager->persist($unimportantTask);
-//
-//        $manager->flush();
+        $priorities = ['priority-blocker', 'priority-major', 'priority-minor'];
+        $resolutions = ['resolution-new', 'resolution-progress', 'resolution-review', 'resolution-resolved', 'resolution-rejected', 'resolution-closed'];
+
+        for ($i = 0; $i < 50; ++$i) {
+            $issue = new Issue();
+            $issue->setPriority($this->getReference($priorities[array_rand($priorities, 1)]));
+            $issue->setResolution($this->getReference($resolutions[array_rand($resolutions, 1)]));
+            $issue->setAsignee($this->getReference('user-'.mt_rand(0, 4)));
+            $issue->setReporter($this->getReference('user-'.mt_rand(0, 4)));
+            $issue->setCode('ISSUE-'.mt_rand(0, 123));
+            $issue->setDescription('Lorem ipsum amet dolor sit');
+            $manager->persist($issue);
+        }
+        $manager->flush();
     }
 }

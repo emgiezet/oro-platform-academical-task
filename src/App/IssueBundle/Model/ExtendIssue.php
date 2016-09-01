@@ -3,15 +3,14 @@
  * Created by PhpStorm.
  * User: mgz
  * Date: 01.09.16
- * Time: 11:44
+ * Time: 11:44.
  */
 namespace App\IssueBundle\Model;
-
 
 class ExtendIssue
 {
     /**
-     * Constructor
+     * Constructor.
      *
      * The real implementation of this method is auto generated.
      *
@@ -20,5 +19,4 @@ class ExtendIssue
     public function __construct()
     {
     }
-
 }

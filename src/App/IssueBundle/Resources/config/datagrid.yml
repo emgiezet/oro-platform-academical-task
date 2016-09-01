@@ -28,20 +28,21 @@ datagrid:
             type:
                 label: Type
                 frontend_type: integer
-            status:
-                label: Status
-                frontend_type: integer
+            workflow:
+                label: Workflow
+                frontend_type: relation
             resolution:
                 label: Resolution
-                frontend_type: integer
+                frontend_type: relation
             reporter:
                 label: Reporter
-                frontend_type: integer
+                frontend_type: relation
             asignee:
                 label: Asignee
-                frontend_type: integer
+                frontend_type: relation
             priority:
                 label: Priority
+                frontend_type: relation
         sorters:
             columns:
                 code:

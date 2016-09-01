@@ -8,7 +8,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
 use Oro\Bundle\UserBundle\Entity\User;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
-
 use Oro\Bundle\DataAuditBundle\Metadata\Annotation as Oro;
 
 /**
@@ -29,7 +28,7 @@ use Oro\Bundle\DataAuditBundle\Metadata\Annotation as Oro;
  *          },
  *          "dictionary"={
  *              "virtual_fields"={"id"},
- *              "search_fields"={"code", "summary", "type", "priority", "status", "resolution", "reporter", "assignee"},
+ *              "search_fields"={"code", "summary", "type", "priority", "workflow", "resolution", "reporter", "assignee"},
  *              "representation_field"="fullName",
  *              "activity_support"="true"
  *          },
@@ -46,14 +45,20 @@ use Oro\Bundle\DataAuditBundle\Metadata\Annotation as Oro;
 class Issue extends ExtendIssue
 {
     const TYPE_BUG = 1;
+
     const TYPE_TASK = 2;
+
     const TYPE_SUBTASK = 3;
+
     const TYPE_STORY = 4;
 
+    /**
+     * @var array
+     */
     public static $typeArray = array(
         self::TYPE_BUG => 'Bug',
         self::TYPE_TASK => 'Task',
-        self::TYPE_SUBTASK =>'Subtask',
+        self::TYPE_SUBTASK => 'Subtask',
         self::TYPE_STORY => 'Story',
     );
 
@@ -108,7 +113,6 @@ class Issue extends ExtendIssue
      * @var Priority
      * @ORM\ManyToOne(targetEntity="Priority")
      * @ORM\JoinColumn(name="issue_priority_id", onDelete="SET NULL")
-     *
      */
     private $priority;
 
@@ -116,16 +120,9 @@ class Issue extends ExtendIssue
      * @var Resolution|null
      * @ORM\ManyToOne(targetEntity="Resolution")
      * @ORM\JoinColumn(name="issue_resolution_id", onDelete="SET NULL")
-     *
      */
     private $resolution;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="status", type="string", length=255)
-     */
-    private $status;
     /**
      * @var User
      *
@@ -194,6 +191,9 @@ class Issue extends ExtendIssue
      */
     private $updated;
 
+    /**
+     * Issue constructor.
+     */
     public function __construct()
     {
         $this->created = new \DateTime('now');
@@ -303,22 +303,6 @@ class Issue extends ExtendIssue
     public function setResolution($resolution)
     {
         $this->resolution = $resolution;
-    }
-
-    /**
-     * @return string
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    /**
-     * @param string $status
-     */
-    public function setStatus($status)
-    {
-        $this->status = $status;
     }
 
     /**
@@ -480,5 +464,4 @@ class Issue extends ExtendIssue
     {
         self::$typeArray = $typeArray;
     }
-
 }

@@ -1,0 +1,5 @@
+services:
+    app.issue.form.type.issue:
+        class: App\IssueBundle\Form\Type\IssueType
+        tags:
+            - { name: form.type, alias: app_issuebundle_issue }
