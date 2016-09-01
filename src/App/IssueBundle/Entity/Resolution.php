@@ -101,6 +101,25 @@ class Resolution
     {
         return $this->priority;
     }
+
+    /**
+     * @return ArrayColleciton
+     */
+    public function getIssues()
+    {
+        return $this->issues;
+    }
+
+    /**
+     * @param ArrayColleciton $issues
+     */
+    public function setIssues($issues)
+    {
+        $this->issues = $issues;
+    }
+
+
+
     /**
      * @return string
      */

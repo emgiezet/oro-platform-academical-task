@@ -57,18 +57,18 @@ class IssueBundle implements Migration, OrderedMigrationInterface
         $issueTable->addForeignKeyConstraint('app_issue_priority', ['priority'], ['id']);
         $issueTable->addColumn('parent', 'integer');
         $issueTable->setPrimaryKey(['id']);
-        $priorityTable->addIndex(['code'], 'app_issue_code_idx', []);
+        $issueTable->addIndex(['code'], 'app_issue_code_idx', []);
 
         $relatedTable = $schema->createTable('app_issue_related');
-        $issueTable->addColumn('issue_id', 'integer');
-        $issueTable->addColumn('related_id', 'integer');
-        $issueTable->addForeignKeyConstraint('app_issue', ['issue_id'], ['id']);
-        $issueTable->addForeignKeyConstraint('app_issue', ['related_id'], ['id']);
+        $relatedTable->addColumn('issue_id', 'integer');
+        $relatedTable->addColumn('related_id', 'integer');
+        $relatedTable->addForeignKeyConstraint('app_issue', ['issue_id'], ['id']);
+        $relatedTable->addForeignKeyConstraint('app_issue', ['related_id'], ['id']);
 
-        $relatedTable = $schema->createTable('app_issue_collaborators');
-        $issueTable->addColumn('issue_id', 'integer');
-        $issueTable->addColumn('user_id', 'integer');
-        $issueTable->addForeignKeyConstraint('app_issue', ['issue_id'], ['id']);
-        $issueTable->addForeignKeyConstraint('oro_user', ['user_id'], ['id']);
+        $collaboratorsTable = $schema->createTable('app_issue_collaborators');
+        $collaboratorsTable->addColumn('issue_id', 'integer');
+        $collaboratorsTable->addColumn('user_id', 'integer');
+        $collaboratorsTable->addForeignKeyConstraint('app_issue', ['issue_id'], ['id']);
+        $collaboratorsTable->addForeignKeyConstraint('oro_user', ['user_id'], ['id']);
     }
 }
