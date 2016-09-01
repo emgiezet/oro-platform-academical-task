@@ -9,18 +9,23 @@ namespace App\IssueBundle\Migrations\Schema\v1_1;
 
 use Doctrine\DBAL\Schema\Schema;
 use Oro\Bundle\MigrationBundle\Migration\Migration;
+use Oro\Bundle\MigrationBundle\Migration\OrderedMigrationInterface;
 use Oro\Bundle\MigrationBundle\Migration\QueryBag;
 use Oro\Bundle\NoteBundle\Migration\Extension\NoteExtension;
 use Oro\Bundle\NoteBundle\Migration\Extension\NoteExtensionAwareInterface;
 
-class IssueBundle implements Migration, NoteExtensionAwareInterface
+class IssueBundle implements Migration, NoteExtensionAwareInterface, OrderedMigrationInterface
 {
+    public function getOrder()
+    {
+        return 1001;
+    }
     /** @var NoteExtension */
     protected $noteExtension;
 
     public function up(Schema $schema, QueryBag $queries)
     {
-        //        $this->noteExtension->addNoteAssociation($schema, 'app_issue');
+        $this->noteExtension->addNoteAssociation($schema, 'app_issue');
     }
 
     /**

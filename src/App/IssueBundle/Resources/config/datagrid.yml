@@ -28,9 +28,9 @@ datagrid:
             type:
                 label: Type
                 frontend_type: integer
-            workflow:
-                label: Workflow
-                frontend_type: relation
+#            workflow:
+#                label: Workflow
+#                frontend_type: relation
             resolution:
                 label: Resolution
                 frontend_type: relation

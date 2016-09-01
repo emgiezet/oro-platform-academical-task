@@ -152,7 +152,12 @@ class Issue extends ExtendIssue
     /**
      * @var User[]|Collection
      *
-     * @ORM\ManyToOne(targetEntity="Oro\Bundle\UserBundle\Entity\User")
+     * @ORM\ManyToMany(targetEntity="Oro\Bundle\UserBundle\Entity\User")
+     * @ORM\JoinTable( name="app_issue_collaborators",
+     *     joinColumns={@ORM\JoinColumn(name="issue_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")}
+     *      )
+     * )
      */
     private $collaborators;
 
@@ -169,13 +174,6 @@ class Issue extends ExtendIssue
      * @ORM\OneToMany(targetEntity="App\IssueBundle\Entity\Issue", mappedBy="parent")
      */
     private $children;
-
-    /**
-     * @var ArrayCollection
-     *
-     * @ORM\Column(name="notes", type="string", length=255)
-     */
-    private $notes;
 
     /**
      * @var \DateTime
@@ -197,6 +195,8 @@ class Issue extends ExtendIssue
     public function __construct()
     {
         $this->created = new \DateTime('now');
+        $this->collaborators = new ArrayCollection();
+        $this->relatedIssues = new ArrayCollection();
     }
 
     /**
@@ -402,22 +402,6 @@ class Issue extends ExtendIssue
     }
 
     /**
-     * @return ArrayCollection
-     */
-    public function getNotes()
-    {
-        return $this->notes;
-    }
-
-    /**
-     * @param ArrayCollection $notes
-     */
-    public function setNotes($notes)
-    {
-        $this->notes = $notes;
-    }
-
-    /**
      * @return \DateTime
      */
     public function getCreated()
@@ -463,5 +447,61 @@ class Issue extends ExtendIssue
     public static function setTypeArray($typeArray)
     {
         self::$typeArray = $typeArray;
+    }
+
+    /**
+     * @param User $user
+     *
+     * @return $this
+     */
+    public function addCollaborator(User $user)
+    {
+        if (!$this->collaborators->contains($user)) {
+            $this->collaborators->add($user);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param User $user
+     *
+     * @return $this
+     */
+    public function removeCollaborator(User $user)
+    {
+        if ($this->collaborators->contains($user)) {
+            $this->collaborators->removeElement($user);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param Issue $issue
+     *
+     * @return $this
+     */
+    public function addRelatedIssue(Issue $issue)
+    {
+        if (!$this->relatedIssues->contains($issue)) {
+            $this->relatedIssues->add($issue);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param Issue $issue
+     *
+     * @return $this
+     */
+    public function removeRelatedIssue(Issue $issue)
+    {
+        if ($this->relatedIssues->contains($issue)) {
+            $this->relatedIssues->removeElement($issue);
+        }
+
+        return $this;
     }
 }

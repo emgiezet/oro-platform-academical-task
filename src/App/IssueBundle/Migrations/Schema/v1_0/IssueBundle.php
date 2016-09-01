@@ -9,9 +9,10 @@ namespace App\IssueBundle\Migrations\Schema\v1_0;
 
 use Doctrine\DBAL\Schema\Schema;
 use Oro\Bundle\MigrationBundle\Migration\Migration;
+use Oro\Bundle\MigrationBundle\Migration\OrderedMigrationInterface;
 use Oro\Bundle\MigrationBundle\Migration\QueryBag;
 
-class IssueBundle implements Migration
+class IssueBundle implements Migration, OrderedMigrationInterface
 {
     public function getOrder()
     {
@@ -27,12 +28,14 @@ class IssueBundle implements Migration
         $resolutionTable->addColumn('id', 'integer', ['autoincrement' => true]);
         $resolutionTable->addColumn('label', 'string', ['lenght' => 255]);
         $resolutionTable->addColumn('priority', 'integer');
+        $resolutionTable->addIndex(['label'], 'app_issue_resolution_label_idx', []);
         $resolutionTable->setPrimaryKey(['id']);
 
         $priorityTable = $schema->createTable('app_issue_priority');
         $priorityTable->addColumn('id', 'integer', ['autoincrement' => true]);
         $priorityTable->addColumn('label', 'string', ['lenght' => 255]);
         $priorityTable->addColumn('priority', 'integer');
+        $priorityTable->addIndex(['label'], 'app_issue_priority_label_idx', []);
         $priorityTable->setPrimaryKey(['id']);
 
         $issueTable = $schema->createTable('app_issue');
@@ -41,8 +44,6 @@ class IssueBundle implements Migration
         $issueTable->addColumn('summary', 'string', ['lenght' => 255]);
         $issueTable->addColumn('description', 'text');
         $issueTable->addColumn('type', 'smallint');
-        $issueTable->addColumn('workflow', 'integer');
-        $issueTable->addColumn('notes', 'integer');
         $issueTable->addColumn('created', 'datetime');
         $issueTable->addColumn('updated', 'datetime');
         $issueTable->addColumn('priority', 'integer');
@@ -56,9 +57,18 @@ class IssueBundle implements Migration
         $issueTable->addForeignKeyConstraint('app_issue_priority', ['priority'], ['id']);
         $issueTable->addColumn('parent', 'integer');
         $issueTable->setPrimaryKey(['id']);
+        $priorityTable->addIndex(['code'], 'app_issue_code_idx', []);
 
-        //todo: create m2n table for releated issues
+        $relatedTable = $schema->createTable('app_issue_related');
+        $issueTable->addColumn('issue_id', 'integer');
+        $issueTable->addColumn('related_id', 'integer');
+        $issueTable->addForeignKeyConstraint('app_issue', ['issue_id'], ['id']);
+        $issueTable->addForeignKeyConstraint('app_issue', ['related_id'], ['id']);
 
-        //todo: create m2n table for involved users
+        $relatedTable = $schema->createTable('app_issue_collaborators');
+        $issueTable->addColumn('issue_id', 'integer');
+        $issueTable->addColumn('user_id', 'integer');
+        $issueTable->addForeignKeyConstraint('app_issue', ['issue_id'], ['id']);
+        $issueTable->addForeignKeyConstraint('oro_user', ['user_id'], ['id']);
     }
 }

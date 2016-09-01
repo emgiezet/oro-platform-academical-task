@@ -37,7 +37,7 @@
         'entity': issue,
         'indexPath': path('app_issue_index'),
         'indexLabel': 'Issues',
-        'entityTitle': issue.subject
+        'entityTitle': issue.summary
         } %}
         {{ parent() }}
     {% else %}
@@ -60,7 +60,6 @@
             form_row(form.asignee),
             form_row(form.priority),
             form_row(form.type),
-            form_row(form.status),
             form_row(form.resolution),
             form_row(form.parent),
             form_row(form.relatedIssues),

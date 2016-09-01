@@ -1,4 +1,8 @@
 oro_entity_config:
-    app_issue:
+    issue:
         entity:
-            items: ~
+            enabled: # boolean
+                options:
+                    require_schema_update: true
+                    priority:           260
+                    default_value:      false

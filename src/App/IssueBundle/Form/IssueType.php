@@ -20,7 +20,6 @@ class IssueType extends AbstractType
             ->add('code')
             ->add('description')
             ->add('type', 'choice', ['choices' => Issue::$typeArray])
-            ->add('workflow')
             ->add('notes')
             ->add('created')
             ->add('updated')
