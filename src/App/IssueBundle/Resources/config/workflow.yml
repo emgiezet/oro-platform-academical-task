@@ -2,9 +2,9 @@ workflows:
     app_issue_workflow:
         label:      'Issue Workflow'
         entity:     App\IssueBundle\Entity\Issue
-        start_step: open            # new lead will be created with this step
-        steps_display_ordered: true # all steps will be visible in steps widget
-        entity_attribute: lead      # lead will be accessible by $lead in actions and conditions
+        start_step: open
+        steps_display_ordered: true
+        entity_attribute: status
 
         steps:
             open:

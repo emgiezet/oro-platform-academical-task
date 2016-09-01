@@ -2,6 +2,7 @@
 
 namespace App\IssueBundle\Entity;
 
+use App\IssueBundle\Model\ExtendIssue;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
@@ -17,12 +18,32 @@ use Oro\Bundle\DataAuditBundle\Metadata\Annotation as Oro;
  * @ORM\Entity(repositoryClass="App\IssueBundle\Entity\IssueRepository")
  * @Oro\Loggable
  * @Config(
- *  defaultValues={
- *      "dataaudit"={"auditable"=true}
- *  }
+ *      routeName="app_issue_index",
+ *      routeView="app_issue_view",
+ *      defaultValues={
+ *          "entity"={
+ *              "icon"="icon-task"
+ *          },
+ *          "grouping"={
+ *              "groups"={"dictionary"}
+ *          },
+ *          "dictionary"={
+ *              "virtual_fields"={"id"},
+ *              "search_fields"={"code", "summary", "type", "priority", "status", "resolution", "reporter", "assignee"},
+ *              "representation_field"="fullName",
+ *              "activity_support"="true"
+ *          },
+ *          "dataaudit"={"auditable"=true},
+ *          "grid"={
+ *              "default"="app-issue-grid"
+ *          },
+ *          "tag"={
+ *              "enabled"=true
+ *          }
+ *      }
  * )
  */
-class Issue
+class Issue extends ExtendIssue
 {
     const TYPE_BUG = 1;
     const TYPE_TASK = 2;
@@ -56,6 +77,16 @@ class Issue
      * @var string
      *
      * @ORM\Column(name="code", type="string", length=255)
+     * @ConfigField(
+     *      defaultValues={
+     *          "dataaudit"={
+     *              "auditable"=true
+     *          },
+     *          "importexport"={
+     *              "identity"=true
+     *          }
+     *      }
+     * )
      */
     private $code;
 
@@ -162,7 +193,6 @@ class Issue
      * @ORM\Column(name="updated", type="datetime")
      */
     private $updated;
-
 
     public function __construct()
     {
@@ -453,4 +483,5 @@ class Issue
     {
         self::$typeArray = $typeArray;
     }
+
 }

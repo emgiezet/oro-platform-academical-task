@@ -1,0 +1,2 @@
+bundles:
+    - App\IssueBundle\IssueBundle

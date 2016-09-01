@@ -9,8 +9,8 @@ class AppKernel extends OroKernel
     public function registerBundles()
     {
         $bundles = array(
-        // bundles,
-            new App\IssueBundle\IssueBundle(),
+//        // bundles,
+//            new App\IssueBundle\IssueBundle(),
         );
 
         if ('dev' === $this->getEnvironment()) {
