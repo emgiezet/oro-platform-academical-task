@@ -24,7 +24,7 @@ class IssueController extends Controller
 
     /**
      * @Route("/create", name="app_issue_create")
-     * @Template("AppBundle:Task:update.html.twig")
+     * @Template("IssueBundle:Issue:update.html.twig")
      */
     public function createAction(Request $request)
     {
@@ -33,7 +33,7 @@ class IssueController extends Controller
 
     /**
      * @Route("/edit/{id}", name="app_issue_update", requirements={"id"="\d+"})
-     * @Template("AppBundle:Task:update.html.twig")
+     * @Template("IssueBundle:Issue:update.html.twig")
      */
     public function editAction(Issue $issue, Request $request)
     {

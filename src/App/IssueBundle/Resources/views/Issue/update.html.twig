@@ -1,4 +1,4 @@
-{# src/AppBundle/Resources/views/Task/update.html.twig #}
+{# src/AppBundle/Resources/views/issue/update.html.twig #}
 
 {# extend the base template from the OroUIBundle #}
 {% extends 'OroUIBundle:actions:update.html.twig' %}
@@ -6,13 +6,13 @@
 {# reuse the form theme provided with the OroPlatform #}
 {% form_theme form with 'OroFormBundle:Form:fields.html.twig' %}
 
-{# make the current task accessible with the task variable #}
-{% set task = form.vars.value %}
+{# make the current issue accessible with the issue variable #}
+{% set issue = form.vars.value %}
 
-{# choose the appropriate action depending on whether a task is created or modified #}
+{# choose the appropriate action depending on whether a issue is created or modified #}
 {# this variable needs to be named formAction as this is what the base template expects #}
-{% if task.id %}
-    {% set formAction = path('app_issue_update', { 'id': task.id }) %}
+{% if issue.id %}
+    {% set formAction = path('app_issue_update', { 'id': issue.id }) %}
 {% else %}
     {% set formAction = path('app_issue_create') %}
 {% endif %}
@@ -34,20 +34,20 @@
 {% block pageHeader %}
     {% if issue.id %}
         {% set breadcrumbs = {
-        'entity': task,
+        'entity': issue,
         'indexPath': path('app_issue_index'),
         'indexLabel': 'Issues',
-        'entityTitle': task.subject
+        'entityTitle': issue.subject
         } %}
         {{ parent() }}
     {% else %}
         {% set title = 'oro.ui.create_entity'|trans({ '%entityName%': 'Issue' }) %}
-        {{ include('OroUIBundle::page_title_block.html.twig', { title: title }) %}
-        {% endif %}
+        {{  include('OroUIBundle::page_title_block.html.twig', { title: title }) }}
+    {% endif %}
 {% endblock pageHeader %}
 
 {% block content_data %}
-    {% set id = 'task-edit' %}
+    {% set id = 'issue-edit' %}
     {% set dataBlocks = [{
         'title': 'General'|trans,
         'class': 'active',
@@ -56,7 +56,7 @@
             'data': [
             form_row(form.summary),
             form_row(form.description),
-            form_row(form.assignee),
+            form_row(form.asignee),
             form_row(form.updated),
             form_row(form.priority),
             form_row(form.type),

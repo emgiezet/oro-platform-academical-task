@@ -141,7 +141,7 @@ class Issue extends ExtendIssue
     private $asignee;
 
     /**
-     * @var ArrayCollection
+     * @var Issue[]|Collection
      *
      * @ORM\ManyToMany(targetEntity="App\IssueBundle\Entity\Issue")
      * @ORM\JoinTable( name="app_issue_related",
@@ -153,7 +153,7 @@ class Issue extends ExtendIssue
     private $relatedIssues;
 
     /**
-     * @var ArrayCollection
+     * @var User[]|Collection
      *
      * @ORM\ManyToOne(targetEntity="Oro\Bundle\UserBundle\Entity\User")
      */
@@ -167,7 +167,7 @@ class Issue extends ExtendIssue
     private $parent;
 
     /**
-     * @var ArrayCollection
+     * @var Issue[]|Collection
      *
      * @ORM\OneToMany(targetEntity="App\IssueBundle\Entity\Issue", mappedBy="parent")
      */
@@ -196,10 +196,7 @@ class Issue extends ExtendIssue
 
     public function __construct()
     {
-        $this->relatedIssues = new ArrayCollection();
-        $this->collaborators = new ArrayCollection();
         $this->created = new \DateTime('now');
-
     }
 
     /**
