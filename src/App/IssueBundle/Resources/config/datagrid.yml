@@ -127,12 +127,12 @@ datagrid:
                 type:          navigate
                 label:         oro.grid.action.view
                 icon:          eye-open
-                link:          update_link
+                link:          view_link
                 rowAction:     true
             update:
                 type:          navigate
                 label:         oro.grid.action.update
                 icon:          edit
-                link:          view_link
+                link:          update_link
 
 

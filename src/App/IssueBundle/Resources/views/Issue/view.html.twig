@@ -1,8 +1,5 @@
 {% extends 'OroUIBundle:actions:view.html.twig' %}
 {% import 'OroUIBundle::macros.html.twig' as UI %}
-
-{% oro_title_set({params : {"%username%": entity.summary }}) %}
-
 {% block navButtons %}
     {% if editRoute is defined %}
         {{ UI.editButton({
@@ -44,7 +41,7 @@
             'title': 'General Information'|trans,
             'class': 'active',
             'subblocks': [
-                {'data' : [userInformationWidget]}
+                {'data' : ['horse']}
             ]
         }
     ] %}

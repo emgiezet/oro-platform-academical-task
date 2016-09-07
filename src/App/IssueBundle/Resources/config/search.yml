@@ -1,0 +1,91 @@
+App\IssueBundle\Entity\Issue:
+    alias:                          issue
+    title_fields:                   [subject]
+    search_template:                IssueBundle:Search:result.html.twig
+    route:
+        name:                       app_issue_view
+        parameters:
+            id:                     id
+    fields:
+        -
+            name:                   summary
+            target_type:            text
+        -
+            name:                   code
+            target_type:            text
+        -
+            name:                   type
+            target_type:            text
+            target_fields:          [type]
+        -
+            name:                   priority
+            relation_type: many-to-one                       # Indicate that this field is relation field to another table.
+                                                                         # Supported: one-to-one, many-to-many, one-to-many, many-to-one.
+            relation_fields:                                 # Array of fields from relation record we must to index.
+                -
+                    name: label                               # related entity field name to index
+                    target_type: text                        # related entity field name type
+                    target_fields: [priority, all_data]  # target fields to store field index
+                -
+                    name: id
+                    target_type: integer
+                    target_fields: [priority]
+        -
+            name:                   status
+            target_type:            text
+            target_fields:          [status]
+        -
+            name:   resolution
+            relation_type: many-to-one                       # Indicate that this field is relation field to another table.
+                                                                         # Supported: one-to-one, many-to-many, one-to-many, many-to-one.
+            relation_fields:                                 # Array of fields from relation record we must to index.
+                -
+                    name: label                               # related entity field name to index
+                    target_type: text                        # related entity field name type
+                    target_fields: [resolution, all_data]    # target fields to store field index
+                -
+                    name: id
+                    target_type: integer
+                    target_fields: [priority]
+        -
+            name:   reporter
+            relation_type: many-to-one                       # Indicate that this field is relation field to another table.
+                                                                         # Supported: one-to-one, many-to-many, one-to-many, many-to-one.
+            relation_fields:                                 # Array of fields from relation record we must to index.
+                -
+                    name: username                               # related entity field name to index
+                    target_type: text                        # related entity field name type
+                    target_fields: [reporter, all_data]    # target fields to store field index
+                -
+                    name: id
+                    target_type: integer
+                    target_fields: [reporter]
+                -
+                    name: firstname
+                    target_type: text
+                    target_fields: [reporter]
+                -
+                    name: lastname
+                    target_type: text
+                    target_fields: [reporter]
+        -
+            name:   asignee
+            relation_type: many-to-one                       # Indicate that this field is relation field to another table.
+                                                                         # Supported: one-to-one, many-to-many, one-to-many, many-to-one.
+            relation_fields:                                 # Array of fields from relation record we must to index.
+                -
+                    name: username                               # related entity field name to index
+                    target_type: text                        # related entity field name type
+                    target_fields: [relation_type, all_data]    # target fields to store field index
+                -
+                    name: id
+                    target_type: integer
+                    target_fields: [relation_type]
+                -
+                    name: firstname
+                    target_type: text
+                    target_fields: [relation_type, all_data]
+                -
+                    name: lastname
+                    target_type: text
+                    target_fields: [relation_type,  all_data]
