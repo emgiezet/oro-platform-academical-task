@@ -1,0 +1,22 @@
+App\IssueBundle\Entity\Issue:
+    constraints:
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: code
+    properties:
+        summary:
+            - NotBlank: ~
+            - Length:
+                max: 255
+        code:
+            - NotBlank: ~
+            - Length:
+                max: 255
+        description:
+            - NotBlank: ~
+        priority:
+            - NotBlank: ~
+        resolution:
+            - NotBlank: ~
+        reporter:
+            - NotBlank: ~
+        asignee:
+            - NotBlank: ~

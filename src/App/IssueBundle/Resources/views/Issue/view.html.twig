@@ -1,0 +1,55 @@
+{% extends 'OroUIBundle:actions:view.html.twig' %}
+{% import 'OroUIBundle::macros.html.twig' as UI %}
+
+{% oro_title_set({params : {"%username%": entity.summary }}) %}
+
+{% block navButtons %}
+    {% if editRoute is defined %}
+        {{ UI.editButton({
+            'path': path('app_issue_update', { id: entity.id }),
+            'entity_label': 'issue'|trans
+        }) }}
+    {% endif %}
+    {% if  entity.type == 4  %}
+        {{ UI.editButton({
+            'path' : path('app_issue_create_subtask', { id: entity.id }),
+            'entity_label': 'app.issue.create_sutask'|trans
+        }) }}
+    {% endif %}
+{% endblock navButtons %}
+
+{% block pageHeader %}
+    {% if entity.id %}
+        {% set breadcrumbs = {
+        'entity': entity,
+        'indexPath': path('app_issue_index'),
+        'indexLabel': 'Issues',
+        'entityTitle': entity.summary
+        } %}
+        {{ parent() }}
+    {% else %}
+        {% set title = 'oro.ui.create_entity'|trans({ '%entityName%': 'Issue' }) %}
+        {{  include('OroUIBundle::page_title_block.html.twig', { title: title }) }}
+    {% endif %}
+{% endblock pageHeader %}
+
+{% block stats %}
+    <li>{{ 'oro.ui.created_at'|trans }}: {{ entity.created ? entity.created|oro_format_datetime : 'N/A' }}</li>
+    <li>{{ 'oro.ui.updated_at'|trans }}: {{ entity.updated ? entity.updated|oro_format_datetime : 'N/A' }}</li>
+{% endblock stats %}
+
+{% block content_data %}
+    {% set dataBlocks = [
+        {
+            'title': 'General Information'|trans,
+            'class': 'active',
+            'subblocks': [
+                {'data' : [userInformationWidget]}
+            ]
+        }
+    ] %}
+
+    {% set id = 'issueView' %}
+    {% set data = { 'dataBlocks': dataBlocks } %}
+    {{ parent() }}
+{% endblock content_data %}

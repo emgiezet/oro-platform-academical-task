@@ -10,4 +10,18 @@ namespace App\IssueBundle\Entity;
  */
 class IssueRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * @return array
+     */
+    public function getIssuesCountGruppedByStatus()
+    {
+        $qb = $this->createQueryBuilder('i');
+        $qb->addSelect('w.id')
+            ->addSelect('count(i.id)')
+            ->join('i.workflow', 'w')
+            ->groupBy('w.id');
+        $query = $qb->getQuery();
+
+        return $query->getArrayResult();
+    }
 }

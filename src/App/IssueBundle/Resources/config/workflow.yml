@@ -2,10 +2,9 @@ workflows:
     app_issue_workflow:
         label:      'Issue Workflow'
         entity:     App\IssueBundle\Entity\Issue
+        entity_attribute: status
         start_step: open
         steps_display_ordered: true
-        entity_attribute: status
-
         steps:
             open:
                 label: 'Open'
@@ -38,10 +37,18 @@ workflows:
         attributes: ~
 
         transitions:
+            stop_progress:
+                label:  'Stop progress'
+                step_to:  open
+                transition_definition: stop_progress_definition
+
             start_progress:
                 label:        'Start progress'
                 step_to:      in_progress
                 transition_definition: start_progress_definition
+                frontend_options:
+                    icon: 'icon-play'
+                    class: 'btn-success'
             close:
                 label:        'Close'
                 step_to:      closed
@@ -62,6 +69,18 @@ workflows:
                 step_to:      resolved
                 transition_definition: start_progress_definition
         transition_definitions:
-            start_progress_definition: ~
+            start_progress_definition:
+                conditions:
+                      @and:
+                              - @not_blank: [$asignee]
+                              - @not_blank: [$reporter]
+                      post_actions:
+                          - @create_entity:
+                              parameters:
+                                  class: Oro\Bundle\NoteBundle\Entity\Note
+                                  attribute: $notes
+                                  data:
+                                      message: $asignee
+            stop_progress_definition: ~
             close_definition: ~
             reopen_definition: ~

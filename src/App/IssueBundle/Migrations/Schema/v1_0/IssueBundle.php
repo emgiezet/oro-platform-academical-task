@@ -40,22 +40,23 @@ class IssueBundle implements Migration, OrderedMigrationInterface
 
         $issueTable = $schema->createTable('app_issue');
         $issueTable->addColumn('id', 'integer', ['autoincrement' => true]);
-        $issueTable->addColumn('code', 'string', ['lenght' => 255]);
+        $issueTable->addColumn('code', 'string', ['lenght' => 255, 'not_null' => true]);
         $issueTable->addColumn('summary', 'string', ['lenght' => 255]);
         $issueTable->addColumn('description', 'text');
         $issueTable->addColumn('type', 'smallint');
-        $issueTable->addColumn('created', 'datetime');
-        $issueTable->addColumn('updated', 'datetime');
-        $issueTable->addColumn('priority', 'integer');
-        $issueTable->addColumn('resolution', 'integer');
-        $issueTable->addColumn('reporter', 'integer');
-        $issueTable->addColumn('asignee', 'integer');
-        $issueTable->addForeignKeyConstraint('oro_user', ['asignee'], ['id']);
-        $issueTable->addForeignKeyConstraint('oro_user', ['reporter'], ['id']);
-        $issueTable->addForeignKeyConstraint('oro_user', ['asignee'], ['id']);
-        $issueTable->addForeignKeyConstraint('app_issue_resolution', ['resolution'], ['id']);
-        $issueTable->addForeignKeyConstraint('app_issue_priority', ['priority'], ['id']);
-        $issueTable->addColumn('parent', 'integer');
+        $issueTable->addColumn('created', 'datetime', ['not_null' => true]);
+        $issueTable->addColumn('updated', 'datetime', ['not_null' => true]);
+        $issueTable->addColumn('issue_priority_id', 'integer', ['null' => true, 'default' => null]);
+        $issueTable->addColumn('issue_resolution_id', 'integer', ['not_null' => false, 'default' => null]);
+        $issueTable->addColumn('issue_assigne_id', 'integer', ['null' => true]);
+        $issueTable->addColumn('parent_id', 'integer',  ['null' => true, 'default' => null]);
+        $issueTable->addColumn('reporter_id', 'integer',  ['null' => true, 'default' => null]);
+        $issueTable->addForeignKeyConstraint('app_issue', ['parent_id'], ['id']);
+        $issueTable->addForeignKeyConstraint('oro_user', ['issue_assigne_id'], ['id']);
+        $issueTable->addForeignKeyConstraint('oro_user', ['reporter_id'], ['id']);
+        $issueTable->addForeignKeyConstraint('app_issue_resolution', ['issue_resolution_id'], ['id']);
+        $issueTable->addForeignKeyConstraint('app_issue_priority', ['issue_priority_id'], ['id']);
+
         $issueTable->setPrimaryKey(['id']);
         $issueTable->addIndex(['code'], 'app_issue_code_idx', []);
 

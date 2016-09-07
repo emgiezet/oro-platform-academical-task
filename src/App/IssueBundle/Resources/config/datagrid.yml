@@ -1,8 +1,9 @@
 datagrid:
-    app-issue-grid:
+    dashboard-recent-issues-grid:
         source:
             type: orm
             query:
+
                 select:
                     - issue.id
                     - issue.code
@@ -17,31 +18,67 @@ datagrid:
                         - { join: issue.resolution, alias: resolution }
                         - { join: issue.reporter, alias: reporter }
                         - { join: issue.asignee, alias: asignee }
+                    inner:
+                        - { join: issue.collaborators, alias: collaborators }
+        properties:
+            id: ~
+        options:
+            entityHint: issue
+            toolbarOptions:
+                hide: true
+                pageSize:
+                    items: [10]
+                    default_per_page: 10
+    app-issue-grid:
+        source:
+            type: orm
+            query:
+                select:
+                    - issue.id
+                    - issue.code
+                    - issue.summary
+                    - issue.description
+                    - priority.label AS issuePriority
+                    - resolution.label AS issueResolution
+                    - issue.type
+                    - reporter.username AS issueReporter
+                    - asignee.username AS issueAsignee
+                from:
+                    - { table: IssueBundle:Issue, alias: issue }
+                join:
+                    left:
+                        - { join: issue.priority, alias: priority }
+                        - { join: issue.resolution, alias: resolution }
+                        - { join: issue.reporter, alias: reporter }
+                        - { join: issue.asignee, alias: asignee }
+
         columns:
             code:
-                label: Code
+                label: app.issue.code.label
                 frontend_type: integer
             summary:
-                label: Summary
+                label: app.issue.summary.label
             description:
-                label: Description
+                label: app.issue.description.label
+                frontend_type: html
             type:
-                label: Type
-                frontend_type: integer
-#            workflow:
-#                label: Workflow
+                label: app.issue.type.label
+                frontend_type: select
+                choices: ['Bug', 'Task','Subtask', 'Story']
+#            status:
+#                label: app.issue.status.label
 #                frontend_type: relation
-            resolution:
-                label: Resolution
+            issueResolution:
+                label: app.issue.resolution.label
                 frontend_type: relation
-            reporter:
-                label: Reporter
+            issueReporter:
+                label: app.issue.reporter.label
                 frontend_type: relation
-            asignee:
-                label: Asignee
+            issueAsignee:
+                label: app.issue.asignee.label
                 frontend_type: relation
-            priority:
-                label: Priority
+            issuePriority:
+                label: app.issue.priority.label
                 frontend_type: relation
         sorters:
             columns:
@@ -51,7 +88,7 @@ datagrid:
                     data_name: issue.summary
                 description:
                     data_name: issue.description
-                priority:
+                issuePriority:
                     data_name: priority.priority
             default:
                 priority: DESC
@@ -69,3 +106,33 @@ datagrid:
                 issuePriority:
                     type: string
                     data_name: priority.label
+        options:
+            entityHint: issue
+            export:
+                csv: { label: oro.grid.export.csv }
+        properties:
+            id: ~
+            update_link:
+                type: url
+                route: app_issue_update
+                params:
+                    - id
+            view_link:
+                type: url
+                route: app_issue_view
+                params:
+                    - id
+        actions:
+            view:
+                type:          navigate
+                label:         oro.grid.action.view
+                icon:          eye-open
+                link:          update_link
+                rowAction:     true
+            update:
+                type:          navigate
+                label:         oro.grid.action.update
+                icon:          edit
+                link:          view_link
+
+

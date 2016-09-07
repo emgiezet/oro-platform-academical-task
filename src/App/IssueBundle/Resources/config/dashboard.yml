@@ -1,0 +1,9 @@
+oro_dashboard_config:
+    widgets:
+        recent_issues:
+            label: Recent Issues
+            route: oro_dashboard_widget
+            route_parameters:
+                bundle: IssueBundle
+                name: recent_issues_widget
+            description: This widget displays the most recent tasks

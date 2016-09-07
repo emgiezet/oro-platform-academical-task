@@ -44,15 +44,16 @@ use Oro\Bundle\DataAuditBundle\Metadata\Annotation as Oro;
  */
 class Issue extends ExtendIssue
 {
-    const TYPE_BUG = 1;
+    const TYPE_BUG = 0;
 
-    const TYPE_TASK = 2;
+    const TYPE_TASK = 1;
 
-    const TYPE_SUBTASK = 3;
+    const TYPE_SUBTASK = 2;
 
-    const TYPE_STORY = 4;
+    const TYPE_STORY = 3;
 
     /**
+     * Array of available types used to build
      * @var array
      */
     public static $typeArray = array(
@@ -111,14 +112,14 @@ class Issue extends ExtendIssue
 
     /**
      * @var Priority
-     * @ORM\ManyToOne(targetEntity="Priority")
+     * @ORM\ManyToOne(targetEntity="Priority", inversedBy="issues")
      * @ORM\JoinColumn(name="issue_priority_id", onDelete="SET NULL")
      */
     private $priority;
 
     /**
      * @var Resolution|null
-     * @ORM\ManyToOne(targetEntity="Resolution")
+     * @ORM\ManyToOne(targetEntity="Resolution", inversedBy="issues")
      * @ORM\JoinColumn(name="issue_resolution_id", onDelete="SET NULL")
      */
     private $resolution;
@@ -134,6 +135,7 @@ class Issue extends ExtendIssue
      * @var User
      *
      * @ORM\ManyToOne(targetEntity="Oro\Bundle\UserBundle\Entity\User")
+     * @ORM\JoinColumn(name="issue_assigne_id", onDelete="SET NULL")
      */
     private $asignee;
 
@@ -195,6 +197,7 @@ class Issue extends ExtendIssue
     public function __construct()
     {
         $this->created = new \DateTime('now');
+        $this->updated = new \DateTime('now');
         $this->collaborators = new ArrayCollection();
         $this->relatedIssues = new ArrayCollection();
     }
@@ -503,5 +506,13 @@ class Issue extends ExtendIssue
         }
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return (string)$this->code.' - '.$this->summary;
     }
 }

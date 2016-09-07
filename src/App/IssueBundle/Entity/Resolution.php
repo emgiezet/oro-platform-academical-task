@@ -118,8 +118,6 @@ class Resolution
         $this->issues = $issues;
     }
 
-
-
     /**
      * @return string
      */

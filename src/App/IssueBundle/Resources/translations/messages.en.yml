@@ -1,0 +1,25 @@
+app:
+    issue:
+        code:
+            label: Code
+        summary:
+            label: Summary
+        description:
+            label: Description
+        type:
+            label: Type
+        resolution:
+            label: Resolution
+            entity_label: Resolution
+        status:
+            label: Status
+        reporter:
+            label: Reporter
+        asignee:
+            label: Asignee
+        priority:
+            label: Priority
+            entity_label: Priority
+        entity_plural_label: Related Issues
+
+        create_sutask: Create Subtask

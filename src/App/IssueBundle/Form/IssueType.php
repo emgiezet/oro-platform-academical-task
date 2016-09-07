@@ -3,6 +3,8 @@
 namespace App\IssueBundle\Form;
 
 use App\IssueBundle\Entity\Issue;
+use Oro\Bundle\FormBundle\Form\Type\OroAutocompleteType;
+use Oro\Bundle\FormBundle\Form\Type\OroRichTextType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -18,16 +20,12 @@ class IssueType extends AbstractType
         $builder
             ->add('summary')
             ->add('code')
-            ->add('description')
+            ->add('description', OroRichTextType::NAME)
             ->add('type', 'choice', ['choices' => Issue::$typeArray])
-            ->add('notes')
-            ->add('created')
-            ->add('updated')
             ->add('priority')
             ->add('resolution')
             ->add('asignee')
             ->add('relatedIssues')
-            ->add('parent')
         ;
     }
 

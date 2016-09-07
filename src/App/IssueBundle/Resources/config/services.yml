@@ -1,4 +1,13 @@
+parameters:
+    issue.datagrid.helper.class: App\IssueBundle\Service\IssueDataGridHelper
+    issue.colaborators.listener.class: App\IssueBundle\Listener\ColaboratorsListener
+
 services:
-#    issue.example:
-#        class: App\IssueBundle\Example
-#        arguments: [@service_id, "plain_value", %parameter%]
+    issue.datagrid.helper:
+        class: %issue.datagrid.helper.class%
+        arguments: ["plain_value"]
+    issue.colaborators.listener:
+            class: %issue.colaborators.listener.class%
+            tags:
+                - { name: doctrine.event_listener, event: postUpdate, method: postUpdate }
+                - { name: doctrine.event_listener, event: prePersist, method: prePersist }

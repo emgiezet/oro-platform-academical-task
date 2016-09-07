@@ -1,0 +1,15 @@
+{% extends 'OroDashboardBundle:Dashboard:widget.html.twig' %}
+{% import 'OroDataGridBundle::macros.html.twig' as dataGrid %}
+
+{% block content %}
+    {{ dataGrid.renderGrid('dashboard-recent-issues-grid') }}
+{% endblock %}
+
+{% block actions %}
+    {% set actions = [{
+    'url': path('app_issue_index'),
+    'type': 'link',
+    'label': 'All Issues',
+    }] %}
+    {{ parent() }}
+{% endblock %}

@@ -11,18 +11,22 @@ definitions:                                                 # list of definitio
                     @empty: $assignedTo                      # if field $assignedTo is empty
                 parameters:                                  # action parameters
                     class: Oro\Bundle\UserBundle\Entity\User # $assignedTo entity full class name
-                    attribute: $assignedTo                   # name of attribute that will store entity
+                    attribute: $asignee                  # name of attribute that will store entity
                     where:                                   # where conditions
                         username: 'admin'                    # username is 'admin'
 triggers:                                                    # list of triggers
-    contact_definition:                                      # name of trigger
+    issue_definition:                                      # name of trigger
         -
             event: create                                    # event on which the trigger performed
         -
             event: update                                    # event on which the trigger performed
-            field: assignedTo                                # field name to listen
+            field: asignee                                # field name to listen
             priority: 10                                     # priority of the job queue
             queued: true                                     # this process must be executed in queue
             time_shift: 60                                   # this process must be executed with 60 seconds delay
         -
-            cron: */1 * * * *                                # execute process every 1 minute
+            event: update                                    # event on which the trigger performed
+            field: reporter                                # field name to listen
+            priority: 10                                     # priority of the job queue
+            queued: true                                     # this process must be executed in queue
+            time_shift: 60                                   # this process must be executed with 60 seconds delay

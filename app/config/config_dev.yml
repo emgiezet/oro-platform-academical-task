@@ -28,3 +28,8 @@ oro_assetic:
 
 #swiftmailer:
 #    delivery_address: me@example.com
+
+services:
+    profiler.storage:
+        class: Symfony\Component\HttpKernel\Profiler\MongoDbProfilerStorage
+        arguments: ['mongodb://127.0.0.1/bap_profiler/profiler','','', 86400]
