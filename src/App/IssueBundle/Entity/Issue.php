@@ -36,6 +36,9 @@ use Oro\Bundle\DataAuditBundle\Metadata\Annotation as Oro;
  *          "grid"={
  *              "default"="app-issue-grid"
  *          },
+ *          "workflow"={
+ *              "active_workflow"="app_issue_workflow"
+ *          },
  *          "tag"={
  *              "enabled"=true
  *          }
@@ -44,12 +47,24 @@ use Oro\Bundle\DataAuditBundle\Metadata\Annotation as Oro;
  */
 class Issue extends ExtendIssue
 {
+    /**
+     *
+     */
     const TYPE_BUG = 0;
 
+    /**
+     *
+     */
     const TYPE_TASK = 1;
 
+    /**
+     *
+     */
     const TYPE_SUBTASK = 2;
 
+    /**
+     *
+     */
     const TYPE_STORY = 3;
 
     /**
@@ -76,6 +91,13 @@ class Issue extends ExtendIssue
      * @var string
      *
      * @ORM\Column(name="summary", type="string", length=255)
+     * @ConfigField(
+     *      defaultValues={
+     *          "dataaudit"={
+     *              "auditable"=true
+     *          }
+     *      }
+     * )
      */
     private $summary;
 
@@ -107,6 +129,13 @@ class Issue extends ExtendIssue
      * @var string
      *
      * @ORM\Column(name="type", type="integer")
+     * @ConfigField(
+     *      defaultValues={
+     *          "dataaudit"={
+     *              "auditable"=true
+     *          }
+     *      }
+     * )
      */
     private $type;
 
@@ -114,6 +143,13 @@ class Issue extends ExtendIssue
      * @var Priority
      * @ORM\ManyToOne(targetEntity="Priority", inversedBy="issues")
      * @ORM\JoinColumn(name="issue_priority_id", onDelete="SET NULL")
+     * @ConfigField(
+     *      defaultValues={
+     *          "dataaudit"={
+     *              "auditable"=true
+     *          }
+     *      }
+     * )
      */
     private $priority;
 
@@ -121,6 +157,13 @@ class Issue extends ExtendIssue
      * @var Resolution|null
      * @ORM\ManyToOne(targetEntity="Resolution", inversedBy="issues")
      * @ORM\JoinColumn(name="issue_resolution_id", onDelete="SET NULL")
+     * @ConfigField(
+     *      defaultValues={
+     *          "dataaudit"={
+     *              "auditable"=true
+     *          }
+     *      }
+     * )
      */
     private $resolution;
 
@@ -128,6 +171,14 @@ class Issue extends ExtendIssue
      * @var User
      *
      * @ORM\ManyToOne(targetEntity="Oro\Bundle\UserBundle\Entity\User")
+     * @ORM\JoinColumn(name="issue_reporter_id", onDelete="SET NULL")
+     * @ConfigField(
+     *      defaultValues={
+     *          "dataaudit"={
+     *              "auditable"=true
+     *          }
+     *      }
+     * )
      */
     private $reporter;
 
@@ -136,6 +187,13 @@ class Issue extends ExtendIssue
      *
      * @ORM\ManyToOne(targetEntity="Oro\Bundle\UserBundle\Entity\User")
      * @ORM\JoinColumn(name="issue_assigne_id", onDelete="SET NULL")
+     * @ConfigField(
+     *      defaultValues={
+     *          "dataaudit"={
+     *              "auditable"=true
+     *          }
+     *      }
+     * )
      */
     private $asignee;
 
@@ -147,6 +205,13 @@ class Issue extends ExtendIssue
      *     joinColumns={@ORM\JoinColumn(name="issue_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="related_id", referencedColumnName="id")}
      *      )
+     * )
+     * @ConfigField(
+     *      defaultValues={
+     *          "dataaudit"={
+     *              "auditable"=true
+     *          }
+     *      }
      * )
      */
     private $relatedIssues;
@@ -160,6 +225,13 @@ class Issue extends ExtendIssue
      *      inverseJoinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")}
      *      )
      * )
+     * @ConfigField(
+     *      defaultValues={
+     *          "dataaudit"={
+     *              "auditable"=true
+     *          }
+     *      }
+     * )
      */
     private $collaborators;
 
@@ -167,6 +239,13 @@ class Issue extends ExtendIssue
      * @var Issue|null
      *
      * @ORM\ManyToOne(targetEntity="App\IssueBundle\Entity\Issue", inversedBy="children")
+     * @ConfigField(
+     *      defaultValues={
+     *          "dataaudit"={
+     *              "auditable"=true
+     *          }
+     *      }
+     * )
      */
     private $parent;
 
@@ -174,6 +253,13 @@ class Issue extends ExtendIssue
      * @var Issue[]|Collection
      *
      * @ORM\OneToMany(targetEntity="App\IssueBundle\Entity\Issue", mappedBy="parent")
+     * @ConfigField(
+     *      defaultValues={
+     *          "dataaudit"={
+     *              "auditable"=true
+     *          }
+     *      }
+     * )
      */
     private $children;
 
@@ -181,6 +267,13 @@ class Issue extends ExtendIssue
      * @var \DateTime
      *
      * @ORM\Column(name="created", type="datetime")
+     * @ConfigField(
+     *      defaultValues={
+     *          "dataaudit"={
+     *              "auditable"=true
+     *          }
+     *      }
+     * )
      */
     private $created;
 
@@ -188,6 +281,13 @@ class Issue extends ExtendIssue
      * @var \DateTime
      *
      * @ORM\Column(name="updated", type="datetime")
+     * @ConfigField(
+     *      defaultValues={
+     *          "dataaudit"={
+     *              "auditable"=true
+     *          }
+     *      }
+     * )
      */
     private $updated;
 

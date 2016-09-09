@@ -74,13 +74,14 @@ workflows:
 #                      @and:
 #                              - @not_blank: [$asignee]
 #                              - @not_blank: [$reporter]
-#                      post_actions:
-#                          - @create_entity:
-#                              parameters:
-#                                  class: Oro\Bundle\NoteBundle\Entity\Note
-#                                  attribute: $notes
-#                                  data:
-#                                      message: $asignee
+#                  post_actions:
+#                      - @create_entity:
+#                          parameters:
+#                              class: Oro\Bundle\NoteBundle\Entity\Note
+#                              attribute: $notes
+#                              data:
+#                                  owner: $asignee.username
+#                                  message: 'Started'
             stop_progress_definition: ~
             close_definition: ~
             reopen_definition: ~

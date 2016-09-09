@@ -50,10 +50,10 @@ class IssueBundle implements Migration, OrderedMigrationInterface
         $issueTable->addColumn('issue_resolution_id', 'integer', ['not_null' => false, 'default' => null]);
         $issueTable->addColumn('issue_assigne_id', 'integer', ['null' => true]);
         $issueTable->addColumn('parent_id', 'integer',  ['null' => true, 'default' => null]);
-        $issueTable->addColumn('reporter_id', 'integer',  ['null' => true, 'default' => null]);
+        $issueTable->addColumn('issue_reporter_id', 'integer',  ['null' => true, 'default' => null]);
         $issueTable->addForeignKeyConstraint('app_issue', ['parent_id'], ['id']);
         $issueTable->addForeignKeyConstraint('oro_user', ['issue_assigne_id'], ['id']);
-        $issueTable->addForeignKeyConstraint('oro_user', ['reporter_id'], ['id']);
+        $issueTable->addForeignKeyConstraint('oro_user', ['issue_reporter_id'], ['id']);
         $issueTable->addForeignKeyConstraint('app_issue_resolution', ['issue_resolution_id'], ['id']);
         $issueTable->addForeignKeyConstraint('app_issue_priority', ['issue_priority_id'], ['id']);
 
