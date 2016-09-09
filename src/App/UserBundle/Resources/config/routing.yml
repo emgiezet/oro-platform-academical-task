@@ -1,4 +1,0 @@
-app_parent_bundle:
-    resource:     "@!OroUserBundle/Controller"
-    type:         annotation
-    prefix:       /user

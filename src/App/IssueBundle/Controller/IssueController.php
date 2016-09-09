@@ -41,7 +41,7 @@ class IssueController extends Controller
     /**
      * @param Issue $issue
      * @param Request $request
-     * @param null $parent
+     * @param Issue|null $parent
      * @return array
      */
     private function update(Issue $issue, Request $request, $parent = null)
