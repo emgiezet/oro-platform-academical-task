@@ -1,0 +1,38 @@
+parameters:
+    issue.model.colaborator_collector.class: App\IssueBundle\Model\Service\CollaboratorsCollector
+    issue.model.issue_update_stamp.class:  App\IssueBundle\Model\Service\IssueDateUpdater
+    issue.model.issue_code_generator.class: App\IssueBundle\Model\Service\IssueCodeGenerator
+    issue.model.issue_soft_deleter.class: App\IssueBundle\Model\Service\IssueSoftDeleter
+    issue.model.provider.statuses.class: App\IssueBundle\Model\Service\Provider\StatusesProvider
+    issue.model.action.save_note_author_as_collaborator.class: App\IssueBundle\Model\Action\SaveNoteAuthorAsCollaborator
+services:
+    issue.model.colaborator_collector:
+        class: %issue.model.colaborator_collector.class%
+
+    issue.model.issue_date_updater:
+        class: %issue.model.issue_update_stamp.class%
+        arguments:
+            - "@security.token_storage"
+
+    issue.model.issue_code_generator:
+        class: %issue.model.issue_code_generator.class%
+
+    issue.model.issue_soft_deleter:
+        class: %issue.model.issue_soft_deleter.class%
+        arguments:
+            - "@doctrine.orm.entity_manager"
+
+    issue.model.provider.statuses:
+        class: %issue.model.provider.statuses.class%
+        arguments:
+            - "@doctrine.orm.entity_manager"
+
+    issue.model.action.save_note_author_as_collaborator:
+        class: %issue.model.action.save_note_author_as_collaborator.class%
+        arguments:
+            - "@oro_workflow.context_accessor"
+            - "@issue.model.issue_date_updater"
+            - "@issue.model.colaborator_collector"
+            - "@security.token_storage"
+        tags:
+            - { name: oro_workflow.action, alias: save_note_author_as_collaborator }

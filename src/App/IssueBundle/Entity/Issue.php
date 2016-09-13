@@ -6,6 +6,7 @@ use App\IssueBundle\Model\ExtendIssue;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
+use Oro\Bundle\NoteBundle\Entity\Note;
 use Oro\Bundle\UserBundle\Entity\User;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
 use Oro\Bundle\DataAuditBundle\Metadata\Annotation as Oro;
@@ -14,17 +15,15 @@ use Oro\Bundle\DataAuditBundle\Metadata\Annotation as Oro;
  * Issue.
  *
  * @ORM\Table(name="app_issue")
- * @ORM\Entity(repositoryClass="App\IssueBundle\Entity\IssueRepository")
+ * @ORM\Entity(repositoryClass="App\IssueBundle\Entity\Repository\IssueRepository")
  * @Oro\Loggable
  * @Config(
  *      routeName="app_issue_index",
  *      routeView="app_issue_view",
+ *
  *      defaultValues={
  *          "entity"={
- *              "icon"="icon-task"
- *          },
- *          "grouping"={
- *              "groups"={"dictionary"}
+ *              "icon"="icon-ticket"
  *          },
  *          "dictionary"={
  *              "virtual_fields"={"id"},
@@ -32,12 +31,33 @@ use Oro\Bundle\DataAuditBundle\Metadata\Annotation as Oro;
  *              "representation_field"="fullName",
  *              "activity_support"="true"
  *          },
+ *          "ownership"={
+ *              "owner_type"="USER",
+ *              "owner_field_name"="reporter",
+ *              "owner_column_name"="reporter_id",
+ *              "organization_field_name"="organization",
+ *              "organization_column_name"="organization_id"
+ *          },
+ *          "security"={
+ *              "type"="ACL",
+ *              "group_name"=""
+ *          },
+ *          "activity"={
+ *              "immutable"=true
+ *          },
  *          "dataaudit"={"auditable"=true},
  *          "grid"={
  *              "default"="app-issue-grid"
  *          },
  *          "workflow"={
- *              "active_workflow"="app_issue_workflow"
+ *              "active_workflow"="app_issue_workflow",
+ *              "show_step_in_grid"=false
+ *          },
+ *          "activity"={
+ *              "route"="oro_email_activity_view",
+ *              "acl"="oro_email_email_view",
+ *              "action_button_widget"="oro_send_email_button",
+ *              "action_link_widget"="oro_send_email_link"
  *          },
  *          "tag"={
  *              "enabled"=true
@@ -47,28 +67,17 @@ use Oro\Bundle\DataAuditBundle\Metadata\Annotation as Oro;
  */
 class Issue extends ExtendIssue
 {
-    /**
-     *
-     */
     const TYPE_BUG = 0;
 
-    /**
-     *
-     */
     const TYPE_TASK = 1;
 
-    /**
-     *
-     */
     const TYPE_SUBTASK = 2;
 
-    /**
-     *
-     */
     const TYPE_STORY = 3;
 
     /**
-     * Array of available types used to build
+     * Array of available types used to build.
+     *
      * @var array
      */
     public static $typeArray = array(
@@ -290,6 +299,38 @@ class Issue extends ExtendIssue
      * )
      */
     private $updated;
+
+    /**
+     * @var User
+     *
+     * @ORM\ManyToOne(targetEntity="Oro\Bundle\UserBundle\Entity\User")
+     * @ORM\JoinColumn(name="updated_by_id", referencedColumnName="id", onDelete="SET NULL")
+     *
+     * @ConfigField(
+     *      defaultValues={
+     *          "importexport"={
+     *              "excluded"=true
+     *          }
+     *      }
+     * )
+     */
+    protected $updatedBy;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(type="smallint")
+     *
+     * @ConfigField(
+     *      defaultValues={
+     *          "importexport"={
+     *              "excluded"=true
+     *          }
+     *      }
+     * )
+     *
+     */
+    private $deleted = false;
 
     /**
      * Issue constructor.
@@ -580,6 +621,27 @@ class Issue extends ExtendIssue
         return $this;
     }
 
+
+    /**
+     * @param Note $note
+     *
+     * @return $this
+     */
+    public function addNote(Note $note)
+    {
+       $this->notes[] = $note;
+
+        return $this;
+    }
+    /**
+     * Notes getter
+     * @return ArrayCollection
+     */
+    public function getNotes()
+    {
+        return $this->notes;
+    }
+
     /**
      * @param Issue $issue
      *
@@ -613,6 +675,37 @@ class Issue extends ExtendIssue
      */
     public function __toString()
     {
-        return (string)$this->code.' - '.$this->summary;
+        return (string) $this->code.' - '.$this->summary;
     }
+
+    /**
+     * @return User
+     */
+    public function getOwner()
+    {
+        return $this->reporter;
+    }
+    /**
+     * @param User $owner
+     */
+    public function setOwner(User $owner)
+    {
+        $this->reporter = $owner;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDeleted()
+    {
+        return (bool)$this->deleted;
+    }
+    /**
+     * @param bool $deleted
+     */
+    public function setDeleted($deleted)
+    {
+        $this->deleted = (bool)$deleted;
+    }
+
 }

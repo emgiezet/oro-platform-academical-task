@@ -1,6 +1,6 @@
 <?php
 
-namespace App\IssueBundle\Entity;
+namespace App\IssueBundle\Entity\Repository;
 
 /**
  * IssueRepository.

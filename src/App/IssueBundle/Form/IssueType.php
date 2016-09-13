@@ -3,7 +3,6 @@
 namespace App\IssueBundle\Form;
 
 use App\IssueBundle\Entity\Issue;
-use Oro\Bundle\FormBundle\Form\Type\OroAutocompleteType;
 use Oro\Bundle\FormBundle\Form\Type\OroRichTextType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;

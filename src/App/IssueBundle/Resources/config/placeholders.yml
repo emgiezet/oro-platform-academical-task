@@ -1,14 +1,18 @@
-items:                             # items to use in placeholders (templates or actions)
- <item_name>:                      # any unique identifier
-    template: <template>           # path to custom template for renderer
- <another_item_name>:
-    action: <action>               # action name (e.g. OroSearchBundle:Search:searchBar)
+items:
+    user_items:
+        template: IssueBundle:Issue:user_issues_placeholder.html.twig
+        applicable: @oro_ui.placeholder.filter->isInstanceOf($entity$, %oro_user.entity.class%)
+
+    user_crate_task_button:
+        applicable: @oro_ui.placeholder.filter->isInstanceOf($entity$, %oro_user.entity.class%)
+        template: IssueBundle:Issue:user_issues_create_issue_placeholder.html.twig
 
 placeholders:
-  <placeholder_name>:
-    items:
-      <item_name>:
-        order: 100                 # sort order in placeholder
-      <another_item_name>:
-        order: 200
-      <one_more_item_name>: ~      # sort order will be set to 0
+    view_content_data_additional_information:
+        items:
+            user_items:
+                order: 200
+    view_pageActions_after:
+        items:
+              user_crate_task_button:
+                  order: 200

@@ -36,12 +36,31 @@
 {% endblock stats %}
 
 {% block content_data %}
+
+    {# widget#}
+
+    {% set issueData %}
+        {{ UI.renderProperty('app.issue.summary.label', entity.summary) }}
+        {{ UI.renderProperty('app.issue.code.label', entity.code) }}
+        {{ UI.renderHtmlProperty('app.issue.description.label', entity.description) }}
+        {{ UI.renderProperty('app.issue.asignee.label', entity.asignee) }}
+        {{ UI.renderProperty('app.issue.priority.label', entity.priority) }}
+        {{ UI.renderProperty('app.issue.type.label', entity.type) }}
+        {{ UI.renderProperty('app.issue.resolution.label', entity.resolution) }}
+        {{ UI.renderProperty('app.issue.relatedIssues.label', entity.relatedIssues) }}
+        {{ UI.renderProperty('app.issue.summary.label', entity.notes) }}
+
+        <div class="responsive-block">
+            {{ entityConfig.renderDynamicFields(entity) }}
+        </div>
+    {% endset %}
+
     {% set dataBlocks = [
         {
             'title': 'General Information'|trans,
             'class': 'active',
             'subblocks': [
-                {'data' : ['horse']}
+                {'data' : [issueData]}
             ]
         }
     ] %}

@@ -1,13 +1,24 @@
 parameters:
     issue.datagrid.helper.class: App\IssueBundle\Service\IssueDataGridHelper
-    issue.colaborators.listener.class: App\IssueBundle\Listener\ColaboratorsListener
+    issue.entity.class: App\IssueBundle\Entity\Issue
+    issue.workflow.action.set_resolution.class: App\IssueBundle\Workflow\Action\SetResolutionAction
+    issue.workflow.action.remember_collaorator.clas: App\IssueBundle\Workflow\Action\RememberCollaboratorAction
 
 services:
     issue.datagrid.helper:
         class: %issue.datagrid.helper.class%
         arguments: ["plain_value"]
-    issue.colaborators.listener:
-            class: %issue.colaborators.listener.class%
-            tags:
-                - { name: doctrine.event_listener, event: postUpdate, method: postUpdate }
-                - { name: doctrine.event_listener, event: prePersist, method: prePersist }
+    issue.workflow.action.remember_collaorator:
+        class: %issue.workflow.action.remember_collaorator.clas%
+        arguments:
+            - "@issues.model.colaborator_collector"
+            - "@security.token_storage"
+        tags:
+            - { name: oro_workflow.action, alias: remember_collaborant }
+
+    issue.workflow.action.set_resolution:
+        class: %issue.workflow.action.set_resolution.class%
+        arguments:
+            - "@doctrine.orm.entity_manager"
+        tags:
+            - { name: oro_workflow.action, alias: set_resolution }

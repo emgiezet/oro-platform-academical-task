@@ -39,9 +39,10 @@ class IssueController extends Controller
     }
 
     /**
-     * @param Issue $issue
-     * @param Request $request
+     * @param Issue      $issue
+     * @param Request    $request
      * @param Issue|null $parent
+     *
      * @return array
      */
     private function update(Issue $issue, Request $request, $parent = null)
@@ -83,24 +84,27 @@ class IssueController extends Controller
      */
     public function editAction(Issue $issue, Request $request)
     {
+        if ($issue->isDeleted()) {
+            throw new NotFoundHttpException();
+        }
         return $this->update($issue, $request);
     }
 
-
     /**
-     *
      * @Route("/view/{id}", name="app_issue_view", requirements={"id"="\d+"})
      * @Template("IssueBundle:Issue:view.html.twig")
      */
     public function viewAction($id, Request $request)
     {
+        if ($issue->isDeleted()) {
+            throw new NotFoundHttpException();
+        }
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('IssueBundle:Issue')->find($id);
-        $editRoute = $this->generateUrl('app_issue_update', ['id'=>$id]);
-        return ['entity'=>$entity, 'editRoute'=>$editRoute];
+        $editRoute = $this->generateUrl('app_issue_update', ['id' => $id]);
+
+        return ['entity' => $entity, 'editRoute' => $editRoute];
     }
-
-
 
     /**
      * @Route("/create/{id}/subtask", name="app_issue_create_subtask", requirements={"id"="\d+"})
@@ -108,31 +112,21 @@ class IssueController extends Controller
      */
     public function createSubtaskAction(Issue $issue, Request $request)
     {
-        $subtask = new Issue();
-        $subtask->setParent($issue);
-        $subtask->setType(Issue::TYPE_SUBTASK);
-
-        return $this->update($subtask, $request, $issue);
+        if($issue->getType() === Issue::TYPE_STORY) {
+            $subtask = new Issue();
+            $subtask->setParent($issue);
+            $subtask->setType(Issue::TYPE_SUBTASK);
+            return $this->update($subtask, $request, $issue);
+        } else {
+            return $this->redirectToRoute('app_issue_view', ['id'=>$issue->getId()]);
+        }
     }
-
     /**
-     * @Route("/chart", name="app_issue_dashboard_chart_widget")
+     * @Route("/user/items", name="app_issue_user_items")
      * @Template("IssueBundle:Dashboard:chart_issues_types_widget.html.twig")
      */
-    public function dashboardChartWidgetAction()
+    public function userItemsPlaceholderAction()
     {
-        $items = $this->getDoctrine()->getRepository('App/IssueBundle/Entity/Issue')->getIssuesCountGruppedByStatus();
-        var_dump($items);
-        die();
-
-        $viewBuilder = $this->container->get('oro_chart.view_builder');
-
-        $view = $viewBuilder
-            ->setOptions(array('name' => 'line_chart'))
-            ->setArrayData($items)
-            ->setDataMapping(array('label' => 'firstName', 'value' => 'fee'))
-            ->getView();
-
-        return ['chartView' => $view];
+        die('kupa');
     }
 }
