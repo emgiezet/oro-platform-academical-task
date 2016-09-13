@@ -1,6 +1,6 @@
 <?php
 
-namespace IssuesBundle\Model\Service;
+namespace App\IssueBundle\Model\Service;
 
 use Doctrine\ORM\EntityManager;
 use App\IssueBundle\Entity\Issue;
