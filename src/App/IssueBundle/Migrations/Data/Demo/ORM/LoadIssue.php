@@ -60,7 +60,7 @@ class LoadIssue extends AbstractFixture implements ContainerAwareInterface
     private function createSubTasks(ObjectManager $manager)
     {
         $subtasks = new ArrayCollection();
-        /**
+        /*
          * @var \Oro\Bundle\UserBundle\Entity\User
          */
         $user = $this->loadUser($manager);

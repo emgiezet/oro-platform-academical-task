@@ -20,13 +20,12 @@ class IssueType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
         $issue = $builder->getData();
 
         $builder
-            ->add('summary', 'text', ['constraints'   => [
+            ->add('summary', 'text', ['constraints' => [
                 new NotBlank(),
-                new Length(['min' => 5, 'max' => '255'])
+                new Length(['min' => 5, 'max' => '255']),
             ]])
             ->add('description', OroRichTextType::NAME)
             ->add('type', 'choice', ['choices' => [Issue::$typeArray]])
@@ -35,9 +34,9 @@ class IssueType extends AbstractType
                     'class' => 'App\IssueBundle\Entity\Priority',
                     'required' => true,
                     'label' => 'app.issue.priority.label',
-                    'constraints'   => [
+                    'constraints' => [
                         new NotNull(),
-                    ]
+                    ],
                 ])
             ->add('resolution')
             ->add('asignee', 'oro_user_organization_acl_select')
@@ -48,7 +47,7 @@ class IssueType extends AbstractType
                     'multiple' => true,
                     'query_builder' => function (EntityRepository $er) use ($issue) {
                         $parameters = [
-                            'deleted' => false
+                            'deleted' => false,
                         ];
 
                         $qb = $er->createQueryBuilder('i')
@@ -64,7 +63,7 @@ class IssueType extends AbstractType
                         $qb->setParameters($parameters);
 
                         return $qb;
-                    }
+                    },
                 ])
             ->add(
                 'parent',
@@ -80,9 +79,9 @@ class IssueType extends AbstractType
                             ->orderBy('i.summary', 'ASC')
                             ->setParameters([
                                 'type' => Issue::TYPE_STORY,
-                                'deleted' => false
+                                'deleted' => false,
                             ]);
-                    }
+                    },
                 ]
             )
         ;

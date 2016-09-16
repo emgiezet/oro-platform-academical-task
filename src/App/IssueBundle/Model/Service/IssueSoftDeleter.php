@@ -29,7 +29,7 @@ class IssueSoftDeleter
      */
     public function deleteIssueById($id)
     {
-        /**
+        /*
          * @var Issue
          */
         $issue = $this->entityManager->getRepository('IssueBundle:Issue')->findOneBy([

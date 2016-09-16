@@ -53,7 +53,6 @@ class IssueController extends Controller
         $form->handleRequest($request);
         $issue = $form->getData();
         if ($form->isSubmitted() && $form->isValid()) {
-
             $em->persist($issue);
             $em->flush();
 
@@ -113,6 +112,7 @@ class IssueController extends Controller
             $subtask = new Issue();
             $subtask->setType(Issue::TYPE_SUBTASK);
             $subtask->setParent($issue);
+
             return $this->update($subtask, $request);
         } else {
             return $this->redirectToRoute('app_issue_view', ['id' => $issue->getId()]);
@@ -148,7 +148,7 @@ class IssueController extends Controller
         $issue->setAsignee($assignee);
         $issue->setOwner($currentUser);
 
-        /**
+        /*
          * @var Form
          */
         $form = $this->createForm(new IssueType(), $issue);
@@ -159,7 +159,7 @@ class IssueController extends Controller
 
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
-                /**
+                /*
                  * @var Issue
                  */
                 $issue = $form->getData();

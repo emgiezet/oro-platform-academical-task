@@ -6,7 +6,6 @@ use App\IssueBundle\Model\ExtendIssue;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
-use Oro\Bundle\NoteBundle\Entity\Note;
 use Oro\Bundle\OrganizationBundle\Entity\Organization;
 use Oro\Bundle\UserBundle\Entity\User;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
@@ -14,6 +13,7 @@ use Oro\Bundle\DataAuditBundle\Metadata\Annotation as Oro;
 
 /**
  * Issue.
+ *
  * @SuppressWarnings(PHPMD.TooManyFields)
  * @ORM\Table(name="app_issue")
  * @ORM\Entity(repositoryClass="App\IssueBundle\Entity\Repository\IssueRepository")
@@ -560,36 +560,39 @@ class Issue extends ExtendIssue
     public function setChildren($children)
     {
         if (is_array($children) || (true === ($children instanceof ArrayCollection))) {
-
             foreach ($children as $child) {
                 $child->setParent($this);
             }
         }
         $this->children = $children;
-
     }
 
     /**
      * @param Issue $issue
+     *
      * @return $this
      */
-    public function addChild(Issue $issue) {
-        if(!$this->children->contains($issue)) {
+    public function addChild(Issue $issue)
+    {
+        if (!$this->children->contains($issue)) {
             $issue->setParent($this);
             $this->children->add($issue);
         }
+
         return $this;
     }
 
-
     /**
      * @param Issue $issue
+     *
      * @return $this
      */
-    public function removeChild(Issue $issue) {
-        if($this->children->contains($issue)) {
+    public function removeChild(Issue $issue)
+    {
+        if ($this->children->contains($issue)) {
             $this->children->removeElement($issue);
         }
+
         return $this;
     }
 
