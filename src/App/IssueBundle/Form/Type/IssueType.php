@@ -1,6 +1,6 @@
 <?php
 
-namespace App\IssueBundle\Form;
+namespace App\IssueBundle\Form\Type;
 
 use App\IssueBundle\Entity\Issue;
 use Oro\Bundle\FormBundle\Form\Type\OroRichTextType;
@@ -18,9 +18,8 @@ class IssueType extends AbstractType
     {
         $builder
             ->add('summary')
-            ->add('code')
             ->add('description', OroRichTextType::NAME)
-            ->add('type', 'choice', ['choices' => Issue::$typeArray])
+            ->add('type', 'choice', ['choices' => [Issue::$typeArray]])
             ->add('priority')
             ->add('resolution')
             ->add('asignee')

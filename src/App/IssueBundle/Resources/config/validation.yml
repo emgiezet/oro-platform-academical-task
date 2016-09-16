@@ -6,17 +6,9 @@ App\IssueBundle\Entity\Issue:
             - NotBlank: ~
             - Length:
                 max: 255
-        code:
-            - NotBlank: ~
-            - Length:
-                max: 255
         description:
             - NotBlank: ~
         priority:
             - NotBlank: ~
-        resolution:
-            - NotBlank: ~
         reporter:
-            - NotBlank: ~
-        asignee:
             - NotBlank: ~

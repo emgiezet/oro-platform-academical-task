@@ -6,8 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use App\IssueBundle\Entity\Issue;
 
 /**
- * Class CollaboratorsCollector
- * @package App\IssueBundle\Model\Service
+ * Class CollaboratorsCollector.
  */
 class CollaboratorsCollector
 {
@@ -36,7 +35,7 @@ class CollaboratorsCollector
         if (!$collaborators->contains($issue->getReporter()) && $issue->getReporter()) {
             $collaborators->add($issue->getReporter());
         }
-        
+
         $issue->setCollaborators($collaborators);
     }
 }

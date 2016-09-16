@@ -1,0 +1,3 @@
+oro_api:
+    entities:
+      App\IssueBundle\Entity\Issue: ~

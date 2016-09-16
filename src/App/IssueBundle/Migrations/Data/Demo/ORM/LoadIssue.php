@@ -11,53 +11,63 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * Class LoadIssue.
+ */
 class LoadIssue extends AbstractFixture implements ContainerAwareInterface
 {
     /**
      * @var ContainerInterface
      */
     private $container;
-    public function getOrder()
-    {
-        return 20;
-    }
 
+    /**
+     * @param ObjectManager $manager
+     */
     public function load(ObjectManager $manager)
     {
+        $user = $this->loadUser($manager);
         for ($i = 0; $i < 50; ++$i) {
             $issue = new Issue();
+            $issue->setOrganization($user->getOrganization());
             $issue->setPriority($this->loadPriority($manager));
             $issue->setResolution($this->loadResolution($manager));
-            $issue->setReporter($this->loadUser($manager));
+            $issue->setReporter($user);
+            if ($i % 2 === 0) {
+                $issue->setAsignee($user);
+            }
+
             $issue->setCode('ISSUE-'.mt_rand(0, 123));
-            $issue->setDescription('Lorem ipsum amet dolor sit');
-            $issue->setSummary('Lorem ipsum amet dolor sit');
-            $issue->setType(Issue::$typeArray[array_rand(Issue::$typeArray)]);
-            if($issue->getType() == Issue::TYPE_STORY) {
+            $issue->setDescription('Lorem ipsum amet dolor sit'.mt_rand(0, 123));
+            $issue->setSummary('Lorem ipsum amet dolor sit'.mt_rand(0, 123));
+            $issue->setType(mt_rand(0, 3));
+            if ($issue->getType() == Issue::TYPE_STORY) {
                 $subtasks = $this->createSubTasks($manager);
                 $issue->setChildren($subtasks);
             }
+
             $manager->persist($issue);
+            $this->container->get('issue.model.colaborator_collector')->updateCollaborators($issue);
         }
         $manager->flush();
     }
 
-
     /**
      * @param ObjectManager $manager
+     *
      * @return ArrayCollection
      */
     private function createSubTasks(ObjectManager $manager)
     {
         $subtasks = new ArrayCollection();
         /**
-         * @var \Oro\Bundle\UserBundle\Entity\User $user
+         * @var \Oro\Bundle\UserBundle\Entity\User
          */
         $user = $this->loadUser($manager);
 
         $priority = $this->loadPriority($manager);
 
-        for ($i=0; $i<5; $i++) {
+        for ($i = 0; $i < 5; ++$i) {
             $n = $i + 1;
 
             $issue = new Issue();
@@ -69,11 +79,13 @@ class LoadIssue extends AbstractFixture implements ContainerAwareInterface
             $issue->setType(Issue::TYPE_SUBTASK);
             $issue->setPriority($priority);
             $issue->setReporter($user);
-            $issue->setAsignee($user);
+            if ($i % 2 === 0) {
+                $issue->setAsignee($user);
+            }
             $issue->setCreated(new \DateTime('now'));
             $issue->setUpdated(new \DateTime('now'));
 
-            $this->container->get('issues.model.collaboration')->updateCollaborators($issue);
+            $this->container->get('issue.model.colaborator_collector')->updateCollaborators($issue);
 
             $manager->persist($issue);
 
@@ -85,6 +97,7 @@ class LoadIssue extends AbstractFixture implements ContainerAwareInterface
 
     /**
      * @param ObjectManager $manager
+     *
      * @return User
      */
     private function loadUser(ObjectManager $manager)
@@ -96,22 +109,26 @@ class LoadIssue extends AbstractFixture implements ContainerAwareInterface
 
     /**
      * @param ObjectManager $manager
+     *
      * @return Priority
      */
     private function loadPriority(ObjectManager $manager)
     {
-        $priority = $manager->getRepository('IssueBundle:Priority')->findOneBy([]);
+        $priorities = $manager->getRepository('IssueBundle:Priority')->findAll([]);
+        $priority = $priorities[array_rand($priorities)];
 
         return $priority;
     }
 
     /**
      * @param ObjectManager $manager
+     *
      * @return Resolution
      */
     private function loadResolution(ObjectManager $manager)
     {
-        $resolution = $manager->getRepository('IssueBundle:Resolution')->findOneBy([]);
+        $resolutions = $manager->getRepository('IssueBundle:Resolution')->findAll([]);
+        $resolution = $resolutions[array_rand($resolutions)];
 
         return $resolution;
     }

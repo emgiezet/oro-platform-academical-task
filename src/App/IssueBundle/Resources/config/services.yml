@@ -3,6 +3,8 @@ parameters:
     issue.entity.class: App\IssueBundle\Entity\Issue
     issue.workflow.action.set_resolution.class: App\IssueBundle\Workflow\Action\SetResolutionAction
     issue.workflow.action.remember_collaorator.clas: App\IssueBundle\Workflow\Action\RememberCollaboratorAction
+    issue.listener.issue_persisting.class:  App\IssueBundle\EventListeners\IssuesPersistingListener
+    issue.twig.extension.issue_type.class: App\IssueBundle\Twig\IssueTypeExtension
 
 services:
     issue.datagrid.helper:
@@ -11,7 +13,7 @@ services:
     issue.workflow.action.remember_collaorator:
         class: %issue.workflow.action.remember_collaorator.clas%
         arguments:
-            - "@issues.model.colaborator_collector"
+            - "@issue.model.colaborator_collector"
             - "@security.token_storage"
         tags:
             - { name: oro_workflow.action, alias: remember_collaborant }
@@ -22,3 +24,21 @@ services:
             - "@doctrine.orm.entity_manager"
         tags:
             - { name: oro_workflow.action, alias: set_resolution }
+
+    issue.listener.issue_persisting:
+        class: %issue.listener.issue_persisting.class%
+        arguments:
+            - "@issue.model.issue_date_updater"
+            - "@issue.model.issue_code_generator"
+            - "@issue.model.colaborator_collector"
+            - "@security.token_storage"
+        tags:
+            - { name: doctrine.event_listener, event: prePersist }
+            - { name: doctrine.event_listener, event: preUpdate }
+
+    issue.twig.extension.issue_type:
+        class: %issue.twig.extension.issue_type.class%
+        public: true
+        arguments: []
+        tags:
+            - { name: twig.extension }

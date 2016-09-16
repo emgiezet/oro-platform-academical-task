@@ -4,15 +4,21 @@
 
 {% set recordUrl = indexer_item.recordUrl %}
 {% set title = (entity.code ~ ' - '~ entity.summary)|default('N/A') %}
-{% set entityType = oro_entity_config_value(indexer_item.entityName, 'label')|trans %}
 {% block additional_info %}
     <ul>
         <li>Summary: {{  entity.summary }}</li>
-        <li>Type: {{ entity.type  }}</li>
+        <li>Type: {{ entity.type|issue_type_name  }}</li>
+        {% if entity.priority|default(false) %}
         <li>Priority: {{ entity.priority.label }}</li>
-        <li>Resolution: {{ entity.resolution.label }}</li>
+        {% endif %}
+        {% if entity.resolution|default(false) %}
+            <li>Resolution: {{ entity.resolution.label }}</li>
+        {% endif %}
+
         <li>Reporter: {{ entity.reporter.username }}</li>
+        {% if entity.asignee|default(false) %}
         <li>Asignee: {{ entity.asignee.username }}</li>
-        {#<li>Status: {{ entity.status }}</li>#}
+        {% endif %}
+        <li>Status: {{ entity.workflowStep.label }}</li>
     </ul>
 {% endblock %}

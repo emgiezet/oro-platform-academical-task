@@ -1,5 +1,7 @@
 {% extends 'OroUIBundle:actions:view.html.twig' %}
 {% import 'OroUIBundle::macros.html.twig' as UI %}
+{% import 'OroUserBundle::macros.html.twig' as U %}
+{% import 'OroEntityConfigBundle::macros.html.twig' as entityConfig %}
 {% block navButtons %}
     {% if editRoute is defined %}
         {{ UI.editButton({
@@ -7,15 +9,35 @@
             'entity_label': 'issue'|trans
         }) }}
     {% endif %}
-    {% if  entity.type == 4  %}
-        {{ UI.editButton({
-            'path' : path('app_issue_create_subtask', { id: entity.id }),
-            'entity_label': 'app.issue.create_sutask'|trans
-        }) }}
+
+    {% if entity.isStory %}
+        {% if resource_granted('EDIT', entity) %}
+            {{ UI.button({
+                'path':  path('app_issue_create_subtask', { id: entity.id }),
+                'aCss':  'btn btn-large btn-success action-button',
+                'iCss':  'icon-ticket',
+                'label': 'app.issue.add_subtask'|trans,
+                'title': 'app.issue.add_subtask'|trans,
+            }) }}
+        {% endif %}
     {% endif %}
 {% endblock navButtons %}
 
 {% block pageHeader %}
+    {% if entity.parent is not null %}
+        {% set breadcrumbs = {
+        'entity':      entity,
+        'indexPath':   path('app_issue_index'),
+        'indexLabel': 'app.issue.entity_label_plural'|trans,
+        'entityTitle': entity.summary,
+        'additional': [{
+            'entity': entity.parent,
+            'indexPath': path('app_issue_view', { id: entity.parent.id }),
+            'indexLabel': entity.parent.code,
+            'entityTitle': entity.parent.summary,
+        }]
+        } %}
+    {% else %}
     {% if entity.id %}
         {% set breadcrumbs = {
         'entity': entity,
@@ -27,6 +49,7 @@
     {% else %}
         {% set title = 'oro.ui.create_entity'|trans({ '%entityName%': 'Issue' }) %}
         {{  include('OroUIBundle::page_title_block.html.twig', { title: title }) }}
+    {% endif %}
     {% endif %}
 {% endblock pageHeader %}
 
@@ -40,19 +63,95 @@
     {# widget#}
 
     {% set issueData %}
-        {{ UI.renderProperty('app.issue.summary.label', entity.summary) }}
-        {{ UI.renderProperty('app.issue.code.label', entity.code) }}
-        {{ UI.renderHtmlProperty('app.issue.description.label', entity.description) }}
-        {{ UI.renderProperty('app.issue.asignee.label', entity.asignee) }}
-        {{ UI.renderProperty('app.issue.priority.label', entity.priority) }}
-        {{ UI.renderProperty('app.issue.type.label', entity.type) }}
-        {{ UI.renderProperty('app.issue.resolution.label', entity.resolution) }}
-        {{ UI.renderProperty('app.issue.relatedIssues.label', entity.relatedIssues) }}
-        {{ UI.renderProperty('app.issue.summary.label', entity.notes) }}
-
+<div class="widget-content">
+    <div class="row-fluid form-horizontal">
         <div class="responsive-block">
+        {{ UI.renderProperty('app.issue.code.label'|trans, entity.code) }}
+        {{ UI.renderProperty('app.issue.summary.label'|trans, entity.summary) }}
+        {{ UI.renderProperty('app.issue.asignee.label'|trans, entity.asignee) }}
+        {{ UI.renderProperty('app.issue.type.label'|trans, entity.type|issue_type_name) }}
+        {{ UI.renderProperty('app.issue.resolution.label'|trans, entity.resolution) }}
+
+        {{ UI.renderHtmlProperty('app.issue.description.label'|trans, entity.description) }}
+
+        {% if entity.priority is not null %}
+            {{ UI.renderProperty('app.issue.priority.label'|trans, entity.priority.label) }}
+        {% endif %}
+
+        {% if entity.reporter is not null %}
+            {%- set userData -%}
+                {%- if entity.reporter -%}
+                    {{ U.render_user_name(entity.reporter) }}
+                {%- endif -%}
+            {%- endset -%}
+
+            {{ UI.renderHtmlProperty('app.issue.reporter.label'|trans, userData) }}
+        {% endif %}
+
+
+        {% if entity.asignee is not null %}
+            {%- set userData -%}
+                {%- if entity.asignee -%}
+                    {{ U.render_user_name(entity.asignee) }}
+                {%- endif -%}
+            {%- endset -%}
+
+            {{ UI.renderHtmlProperty('app.issue.asignee.label'|trans, userData) }}
+        {% endif %}
+            </div>
+        <div class="responsive-block">
+            {% if entity.resolution is not null %}
+                {{ UI.renderHtmlProperty('app.issue.resolution.label'|trans, entity.resolution) }}
+            {% endif %}
+
+            {% if entity.children|length > 0 %}
+                {% set subtasksData = [] %}
+
+                {% for subtask in entity.children %}
+                    {%- set subtaskData -%}
+                        {{ UI.entityViewLink(subtask, subtask.code, 'app_issue_view') }}
+                    {%- endset %}
+                    {% set subtasksData = subtasksData|merge([subtaskData]) %}
+                {% endfor %}
+
+                {{ UI.renderHtmlProperty('app.issue.children.label'|trans,  UI.renderList(subtasksData)) }}
+            {% endif %}
+
+            {% if entity.relatedIssues|length > 0 %}
+                {% set relatedIssuesData = [] %}
+
+                {% for relatedIssue in entity.relatedIssues %}
+                    {%- set relatedIssueData -%}
+                        {{ UI.entityViewLink(relatedIssue, relatedIssue.label, 'app_issue_view') }}
+                    {%- endset %}
+                    {% set relatedIssuesData = relatedIssuesData|merge([relatedIssueData]) %}
+                {% endfor %}
+
+                {{ UI.renderHtmlProperty('app.issue.relatedIssues.label'|trans,  UI.renderList(relatedIssuesData)) }}
+            {% endif %}
+
+            {% if entity.collaborators|length > 0 %}
+                {% set collaboratorsData = [] %}
+
+                {% for collaborator in entity.collaborators %}
+                    {%- set collaboratorData -%}
+                        {{ U.render_user_name(collaborator) }}
+                    {%- endset %}
+                    {% set collaboratorsData = collaboratorsData|merge([collaboratorData]) %}
+                {% endfor %}
+
+                {{ UI.renderHtmlProperty('app.issue.collaborators.label'|trans,  UI.renderList(collaboratorsData)) }}
+            {% endif %}
+
             {{ entityConfig.renderDynamicFields(entity) }}
+            {#{{ TAG.renderView(entity) }}#}
         </div>
+        <div class="responsive-block">
+        {{ entityConfig.renderDynamicFields(entity) }}
+        </div>
+        </div>
+    </div>
+
     {% endset %}
 
     {% set dataBlocks = [

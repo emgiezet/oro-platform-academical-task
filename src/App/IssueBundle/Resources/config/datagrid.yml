@@ -1,34 +1,61 @@
 datagrid:
     dashboard-recent-issues-grid:
-        source:
-            type: orm
-            query:
-
-                select:
-                    - issue.id
-                    - issue.code
-                    - issue.summary
-                    - issue.description
-                    - priority.label AS issuePriority
-                from:
-                    - { table: IssueBundle:Issue, alias: issue }
-                join:
-                    left:
-                        - { join: issue.priority, alias: priority }
-                        - { join: issue.resolution, alias: resolution }
-                        - { join: issue.reporter, alias: reporter }
-                        - { join: issue.asignee, alias: asignee }
-                    inner:
-                        - { join: issue.collaborators, alias: collaborators }
-        properties:
-            id: ~
-        options:
-            entityHint: issue
-            toolbarOptions:
-                hide: true
-                pageSize:
-                    items: [10]
-                    default_per_page: 10
+            options:
+                entityHint: issue
+                toolbarOptions:
+                    hide: true
+                    pageSize:
+                        items: [10, 25, 50, 100]
+                        default_per_page: 10
+            source:
+                type: orm
+                query:
+                    select:
+                        - issue.id
+                        - issue.code
+                        - issue.summary
+                        - workflowStep.id as workflowStepId
+                        - workflowStep.label as status
+                    from:
+                        - { table: App\IssueBundle\Entity\Issue, alias: issue }
+                    join:
+                        left:
+                            - { join: issue.collaborators, alias: collaborator }
+                            - { join: issue.workflowStep, alias: workflowStep }
+                    where:
+                        and:
+                          - collaborator.id = @oro_security.security_facade->getLoggedUserId
+                        and:
+                            - issue.deleted = false
+            columns:
+                code:
+                    label: app.issue.code.label
+                summary:
+                    label: app.issue.summary.label
+                status:
+                    label: app.issue.status.label
+            sorters:
+                columns:
+                    code:
+                        data_name: issue.code
+                    summary:
+                        data_name: issue.summary
+                default:
+                    id: DESC
+            properties:
+                id: ~
+                view_link:
+                    type: url
+                    route: app_issue_view
+                    params:
+                        - id
+            actions:
+                view:
+                    type: navigate
+                    label: oro.grid.action.view
+                    icon: eye-open
+                    link: view_link
+                    rowAction: true
     app-issue-grid:
         source:
             type: orm
@@ -38,11 +65,15 @@ datagrid:
                     - issue.code
                     - issue.summary
                     - issue.description
+                    - issue.created
+                    - issue.updated
                     - priority.label AS issuePriority
                     - resolution.label AS issueResolution
                     - issue.type
-                    - reporter.username AS issueReporter
-                    - asignee.username AS issueAsignee
+                    - CONCAT(reporter.firstName, CONCAT(' ', reporter.lastName)) as issueReporter
+                    - CONCAT(asignee.firstName, CONCAT(' ', asignee.lastName)) as issueAsignee
+                    - workflowStep.id as workflowStepId
+                    - workflowStep.label as status
                 from:
                     - { table: IssueBundle:Issue, alias: issue }
                 join:
@@ -51,13 +82,18 @@ datagrid:
                         - { join: issue.resolution, alias: resolution }
                         - { join: issue.reporter, alias: reporter }
                         - { join: issue.asignee, alias: asignee }
+                        - { join: issue.workflowStep, alias: workflowStep }
+                where:
+                    and:
+                        - issue.deleted = false
 
         columns:
             code:
                 label: app.issue.code.label
-                frontend_type: integer
+                frontend_type: string
             summary:
                 label: app.issue.summary.label
+                frontend_type: string
             description:
                 label: app.issue.description.label
                 frontend_type: html
@@ -65,21 +101,26 @@ datagrid:
                 label: app.issue.type.label
                 frontend_type: select
                 choices: ['Bug', 'Task','Subtask', 'Story']
-#            status:
-#                label: app.issue.status.label
-#                frontend_type: relation
+            status:
+                label: app.issue.status.label
             issueResolution:
                 label: app.issue.resolution.label
                 frontend_type: relation
             issueReporter:
+                type: twig
                 label: app.issue.reporter.label
-                frontend_type: relation
+                template: IssueBundle:Issue:grid/property/user.html.twig
             issueAsignee:
+                type: twig
                 label: app.issue.asignee.label
-                frontend_type: relation
+                template: IssueBundle:Issue:grid/property/user.html.twig
             issuePriority:
                 label: app.issue.priority.label
                 frontend_type: relation
+            updated:
+                frontend_type: date
+            created:
+                frontend_type: date
         sorters:
             columns:
                 code:
@@ -90,13 +131,19 @@ datagrid:
                     data_name: issue.description
                 issuePriority:
                     data_name: priority.priority
+                updated:
+                    data_name: issue.updated
+                created:
+                    data_name: issue.created
+                status:
+                    data_name: workflowStep.stepOrder
             default:
                 priority: DESC
         filters:
             columns:
                 code:
-                    type: number
-                    data_name: issue.code
+                     type: string
+                     data_name: issue.code
                 summary:
                     type: string
                     data_name: issue.summery
@@ -106,6 +153,21 @@ datagrid:
                 issuePriority:
                     type: string
                     data_name: priority.label
+
+                type:
+                    type: choice
+                    data_name: issue.type
+                    options:
+                        field_options:
+                            multiple: true
+                            choices: ['Bug', 'Task','Subtask', 'Story']
+                status:
+                    type: choice
+                    data_name: workflowStepId
+#                    options:
+#                        field_options:
+#                            multiple: true
+#                            choices: "@issue.model.provider.statuses->getStatusesArray"
         options:
             entityHint: issue
             export:
@@ -122,6 +184,11 @@ datagrid:
                 route: app_issue_view
                 params:
                     - id
+            delete_link:
+                type: url
+                route: app_issue_delete
+                params:
+                    - id
         actions:
             view:
                 type:          navigate
@@ -134,5 +201,61 @@ datagrid:
                 label:         oro.grid.action.update
                 icon:          edit
                 link:          update_link
-
-
+            delete:
+                type:         navigate
+                label: oro.grid.action.delete
+                icon: trash
+                link: delete_link
+    user-view-issues-grid:
+          options:
+              entityHint: issue
+          source:
+              type: orm
+              query:
+                  select:
+                      - issue.id
+                      - issue.code
+                      - issue.summary
+                      - workflowStep.id as workflowStepId
+                      - workflowStep.label as status
+                  from:
+                      - { table: IssueBundle:Issue, alias: issue }
+                  join:
+                      left:
+                          - { join: issue.reporter, alias: reporter }
+                          - { join: issue.asignee, alias: asignee }
+                          - { join: issue.workflowStep, alias: workflowStep }
+                  where:
+                      and:
+                          - reporter.id = @oro_security.security_facade->getLoggedUserId or asignee.id = @oro_security.security_facade->getLoggedUserId
+                      and:
+                          - issue.deleted = false
+          columns:
+              code:
+                  label: issues.issue.code.label
+              summary:
+                  label: issues.issue.summary.label
+              status:
+                  label: issues.issue.status.label
+          sorters:
+              columns:
+                  code:
+                      data_name: issue.code
+                  summary:
+                      data_name: issue.summary
+              default:
+                  id: DESC
+          properties:
+              id: ~
+              view_link:
+                  type: url
+                  route: app_issue_view
+                  params:
+                      - id
+          actions:
+              view:
+                  type: navigate
+                  label: oro.grid.action.view
+                  icon: eye-open
+                  link: view_link
+                  rowAction: true

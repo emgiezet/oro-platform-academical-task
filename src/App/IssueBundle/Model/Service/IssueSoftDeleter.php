@@ -14,6 +14,7 @@ class IssueSoftDeleter
 
     /**
      * IssueDeletion constructor.
+     *
      * @param EntityManager $entityManager
      */
     public function __construct(EntityManager $entityManager)
@@ -29,11 +30,11 @@ class IssueSoftDeleter
     public function deleteIssueById($id)
     {
         /**
-         * @var Issue $issue
+         * @var Issue
          */
         $issue = $this->entityManager->getRepository('IssueBundle:Issue')->findOneBy([
             'id' => $id,
-            'deleted' => false
+            'deleted' => false,
         ]);
 
         if ($issue === null) {

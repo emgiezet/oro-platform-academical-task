@@ -10,8 +10,7 @@ use Oro\Bundle\WorkflowBundle\Model\ContextAccessor;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
- * Class SaveNoteAuthorAsCollaborator
- * @package App\IssueBundle\Model\Action
+ * Class SaveNoteAuthorAsCollaborator.
  */
 class SaveNoteAuthorAsCollaborator extends AbstractAction
 {
@@ -66,7 +65,6 @@ class SaveNoteAuthorAsCollaborator extends AbstractAction
      */
     public function initialize(array $options)
     {
-        //
     }
 
     /**
@@ -74,7 +72,7 @@ class SaveNoteAuthorAsCollaborator extends AbstractAction
      */
     private function updateUpdateStamp(Issue $issue)
     {
-        $this->issueDateUpdater->populateCreationAndUpdateStamps($issue);
+        $this->issueDateUpdater->updateStamps($issue);
     }
 
     /**

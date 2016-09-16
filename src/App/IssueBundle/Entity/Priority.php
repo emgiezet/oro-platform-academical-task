@@ -10,7 +10,7 @@ use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
  * Priority.
  *
  * @ORM\Table(name="app_issue_priority")
- * @ORM\Entity(repositoryClass="App\IssueBundle\Entity\Repository\PriorityRepository")
+ * @ORM\Entity()
  * @Config
  */
 class Priority

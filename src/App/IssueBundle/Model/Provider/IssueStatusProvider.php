@@ -4,7 +4,7 @@ namespace App\IssueBundle\Model\Service\Provider;
 
 use Doctrine\ORM\EntityManager;
 
-class StatusesProvider
+class IssueStatusProvider
 {
     /**
      * @var EntityManager
@@ -13,6 +13,7 @@ class StatusesProvider
 
     /**
      * StatusesProvider constructor.
+     *
      * @param EntityManager $entityManager
      */
     public function __construct(EntityManager $entityManager)

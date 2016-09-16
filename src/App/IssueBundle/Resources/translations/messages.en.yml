@@ -1,25 +1,28 @@
-app:
-    issue:
-        code:
-            label: Code
-        summary:
-            label: Summary
-        description:
-            label: Description
-        type:
-            label: Type
-        resolution:
-            label: Resolution
-            entity_label: Resolution
-        status:
-            label: Status
-        reporter:
-            label: Reporter
-        asignee:
-            label: Asignee
-        priority:
-            label: Priority
-            entity_label: Priority
-        entity_plural_label: Related Issues
-
-        create_sutask: Create Subtask
+app.issue.entity_label: Issue
+app.issue.entity_plural_label: Issues
+app.issue.entity_label_plural: Issues
+app.issue.code.label: Code
+app.issue.summary.label: Summary
+app.issue.description.label: Description
+app.issue.type.label: Type
+app.issue.resolution.label: Resolution
+app.issue.resolution.entity_label: Resolution
+app.issue.status.label: Status
+app.issue.reporter.label: Reporter
+app.issue.asignee.label: Asignee
+app.issue.priority.label: Priority
+app.issue.priority.entity_label: Priority
+app.issue.relatedIssues.label: 'Related Issues'
+app.issue.children.label: Subtasks
+app.issue.create_sutask: 'Create Subtask'
+app.issue.add_subtask: 'Create Subtask'
+app.issue.collaborators.label: Collaborators
+app.issue.dashboard.recent_issues.title: 'Recent Issues'
+app.issue.dashboard.issues_by_status_chart.title: 'Issues by Status Chart'
+app.add_dialog.title: 'Create a task'
+app.add_dialog.button_label: __app.add_dialog.button_label
+app.user_view.issues_assigned_and_reported.title: __app.user_view.issues_assigned_and_reported.title
+issues.issue.flashMessages.create.success: 'Issue Created'
+Cancel: Cancel
+Save: Save
+issue: issue

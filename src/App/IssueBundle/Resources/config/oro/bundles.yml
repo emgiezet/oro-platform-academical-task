@@ -1,2 +1,2 @@
 bundles:
-    - { name: App\IssueBundle\IssueBundle, priority: 200}
+    - { name: App\IssueBundle\IssueBundle, priority: 300}

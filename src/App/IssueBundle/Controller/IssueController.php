@@ -4,7 +4,8 @@ namespace App\IssueBundle\Controller;
 
 use App\IssueBundle\Entity\Issue;
 use App\IssueBundle\Entity\Resolution;
-use App\IssueBundle\Form\IssueType;
+use App\IssueBundle\Form\Type\IssueType;
+use Oro\Bundle\UserBundle\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -55,11 +56,18 @@ class IssueController extends Controller
              * @var Issue
              */
             $data = $form->getData();
+            $em->persist($data);
             if ($parent instanceof Issue) {
+                /**
+                 * @var $parent Issue
+                 */
                 $data->setParent($parent);
                 $data->setType(Issue::TYPE_SUBTASK);
+                $parent->addChild($data);
             }
             $em->persist($data);
+
+
             $em->flush();
 
             return $this->get('oro_ui.router')->redirectAfterSave(
@@ -87,6 +95,7 @@ class IssueController extends Controller
         if ($issue->isDeleted()) {
             throw new NotFoundHttpException();
         }
+
         return $this->update($issue, $request);
     }
 
@@ -96,11 +105,12 @@ class IssueController extends Controller
      */
     public function viewAction($id, Request $request)
     {
-        if ($issue->isDeleted()) {
-            throw new NotFoundHttpException();
-        }
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('IssueBundle:Issue')->find($id);
+        if ($entity->isDeleted()) {
+            throw new NotFoundHttpException();
+        }
+
         $editRoute = $this->generateUrl('app_issue_update', ['id' => $id]);
 
         return ['entity' => $entity, 'editRoute' => $editRoute];
@@ -112,21 +122,78 @@ class IssueController extends Controller
      */
     public function createSubtaskAction(Issue $issue, Request $request)
     {
-        if($issue->getType() === Issue::TYPE_STORY) {
+
+        if ($issue->getType() === Issue::TYPE_STORY) {
             $subtask = new Issue();
-            $subtask->setParent($issue);
             $subtask->setType(Issue::TYPE_SUBTASK);
+            $subtask->setParent($issue);
             return $this->update($subtask, $request, $issue);
         } else {
-            return $this->redirectToRoute('app_issue_view', ['id'=>$issue->getId()]);
+            return $this->redirectToRoute('app_issue_view', ['id' => $issue->getId()]);
         }
     }
     /**
-     * @Route("/user/items", name="app_issue_user_items")
-     * @Template("IssueBundle:Dashboard:chart_issues_types_widget.html.twig")
+     * @Route("/delete/{id}", name="app_issue_delete",
+     *     requirements={"id"="\d+"})
      */
-    public function userItemsPlaceholderAction()
+    public function deleteAction($id)
     {
-        die('kupa');
+        if ($this->get('issues.model.issue_deletion')->deleteIssueById($id)) {
+            $this->addFlash(
+                'success',
+                $this->get('translator')
+                    ->trans('issues.issue.flashMessages.delete.success')
+            );
+        }
+
+        return $this->redirectToRoute('issues.issues_index');
+    }
+
+    /**
+     * @Route("/add-issue-dialog/{id}", name="app_issue_add_dialog",
+     *     requirements={"id"="\d+"})
+     * @Template
+     */
+    public function createIssueForUserAction(User $assignee, Request $request)
+    {
+        $currentUser = $this->get('security.context')->getToken()->getUser();
+
+        $issue = new Issue();
+        $issue->setAsignee($assignee);
+        $issue->setOwner($currentUser);
+
+        /**
+         * @var Form
+         */
+        $form = $this->createForm(new IssueType(), $issue);
+
+        $saved = false;
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                /**
+                 * @var Issue
+                 */
+                $issue = $form->getData();
+
+                $issue->setReporter($currentUser);
+
+                $em = $this->getDoctrine()->getManager();
+
+                $em->persist($issue);
+                $em->flush();
+
+                if ($issue->getId()) {
+                    $saved = true;
+                }
+            }
+        }
+
+        return [
+            'form' => $form->createView(),
+            'saved' => $saved,
+        ];
     }
 }

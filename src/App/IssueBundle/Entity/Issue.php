@@ -7,13 +7,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
 use Oro\Bundle\NoteBundle\Entity\Note;
+use Oro\Bundle\OrganizationBundle\Entity\Organization;
 use Oro\Bundle\UserBundle\Entity\User;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
 use Oro\Bundle\DataAuditBundle\Metadata\Annotation as Oro;
 
 /**
  * Issue.
- *
+ * @SuppressWarnings(PHPMD.TooManyFields)
  * @ORM\Table(name="app_issue")
  * @ORM\Entity(repositoryClass="App\IssueBundle\Entity\Repository\IssueRepository")
  * @Oro\Loggable
@@ -36,7 +37,7 @@ use Oro\Bundle\DataAuditBundle\Metadata\Annotation as Oro;
  *              "owner_field_name"="reporter",
  *              "owner_column_name"="reporter_id",
  *              "organization_field_name"="organization",
- *              "organization_column_name"="organization_id"
+ *              "organization_column_name"="issue_organization_id"
  *          },
  *          "security"={
  *              "type"="ACL",
@@ -192,6 +193,22 @@ class Issue extends ExtendIssue
     private $reporter;
 
     /**
+     * @var Organization
+     *
+     * @ORM\ManyToOne(targetEntity="Oro\Bundle\OrganizationBundle\Entity\Organization")
+     * @ORM\JoinColumn(name="issue_organization_id", referencedColumnName="id", onDelete="SET NULL")
+     *
+     * @ConfigField(
+     *      defaultValues={
+     *          "importexport"={
+     *              "excluded"=true
+     *          }
+     *      }
+     * )
+     */
+    protected $organization;
+
+    /**
      * @var User
      *
      * @ORM\ManyToOne(targetEntity="Oro\Bundle\UserBundle\Entity\User")
@@ -304,7 +321,7 @@ class Issue extends ExtendIssue
      * @var User
      *
      * @ORM\ManyToOne(targetEntity="Oro\Bundle\UserBundle\Entity\User")
-     * @ORM\JoinColumn(name="updated_by_id", referencedColumnName="id", onDelete="SET NULL")
+     * @ORM\JoinColumn(name="issue_updated_by_id", referencedColumnName="id", onDelete="SET NULL")
      *
      * @ConfigField(
      *      defaultValues={
@@ -328,7 +345,6 @@ class Issue extends ExtendIssue
      *          }
      *      }
      * )
-     *
      */
     private $deleted = false;
 
@@ -339,6 +355,7 @@ class Issue extends ExtendIssue
     {
         $this->created = new \DateTime('now');
         $this->updated = new \DateTime('now');
+        $this->children = new ArrayCollection();
         $this->collaborators = new ArrayCollection();
         $this->relatedIssues = new ArrayCollection();
     }
@@ -542,7 +559,38 @@ class Issue extends ExtendIssue
      */
     public function setChildren($children)
     {
+        if (is_array($children) || (true === ($children instanceof ArrayCollection))) {
+
+            foreach ($children as $child) {
+                $child->setParent($this);
+            }
+        }
         $this->children = $children;
+
+    }
+
+    /**
+     * @param Issue $issue
+     * @return $this
+     */
+    public function addChild(Issue $issue) {
+        if(!$this->children->contains($issue)) {
+            $issue->setParent($this);
+            $this->children->add($issue);
+        }
+        return $this;
+    }
+
+
+    /**
+     * @param Issue $issue
+     * @return $this
+     */
+    public function removeChild(Issue $issue) {
+        if($this->children->contains($issue)) {
+            $this->children->removeElement($issue);
+        }
+        return $this;
     }
 
     /**
@@ -620,28 +668,6 @@ class Issue extends ExtendIssue
 
         return $this;
     }
-
-
-    /**
-     * @param Note $note
-     *
-     * @return $this
-     */
-    public function addNote(Note $note)
-    {
-       $this->notes[] = $note;
-
-        return $this;
-    }
-    /**
-     * Notes getter
-     * @return ArrayCollection
-     */
-    public function getNotes()
-    {
-        return $this->notes;
-    }
-
     /**
      * @param Issue $issue
      *
@@ -698,14 +724,53 @@ class Issue extends ExtendIssue
      */
     public function isDeleted()
     {
-        return (bool)$this->deleted;
+        return (bool) $this->deleted;
     }
     /**
      * @param bool $deleted
      */
     public function setDeleted($deleted)
     {
-        $this->deleted = (bool)$deleted;
+        $this->deleted = (bool) $deleted;
     }
 
+    /**
+     * @return User
+     */
+    public function getUpdatedBy()
+    {
+        return $this->updatedBy;
+    }
+
+    /**
+     * @param User $updatedBy
+     */
+    public function setUpdatedBy($updatedBy)
+    {
+        $this->updatedBy = $updatedBy;
+    }
+
+    /**
+     * @return Organization
+     */
+    public function getOrganization()
+    {
+        return $this->organization;
+    }
+
+    /**
+     * @param Organization $organization
+     */
+    public function setOrganization($organization)
+    {
+        $this->organization = $organization;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isStory()
+    {
+        return $this->type === self::TYPE_STORY ? true : false;
+    }
 }

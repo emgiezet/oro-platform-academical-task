@@ -1,32 +1,13 @@
-definitions:                                                 # list of definitions
-    issue_definition:                                        # name of process definition
-        label: 'Issue Definition'                            # label of the process definition
-        enabled: true                                        # this definition is enabled (activated)
-        entity: App\IssueBundle\Entity\Issue                 # related entity
-        order: 20                                            # processing order
-        exclude_definitions: [issue_definition]              # during handling those definitions won't trigger
-        actions_configuration:                               # list of actions to perform
-            - @find_entity:                                  # find existing entity
-                conditions:                                  # action conditions
-                    @empty: $assignedTo                      # if field $assignedTo is empty
-                parameters:                                  # action parameters
-                    class: Oro\Bundle\UserBundle\Entity\User # $assignedTo entity full class name
-                    attribute: $asignee                  # name of attribute that will store entity
-                    where:                                   # where conditions
-                        username: 'admin'                    # username is 'admin'
-triggers:                                                    # list of triggers
-    issue_definition:                                      # name of trigger
+definitions:
+    save_note_author_as_collaborator:
+        label: 'Update issues collaborators after new note was added'
+        enabled: true
+        order: 1
+        entity: Oro\Bundle\NoteBundle\Entity\Note
+        actions_configuration:
+            - '@save_note_author_as_collaborator': ~
+
+triggers:
+    save_note_author_as_collaborator:
         -
-            event: create                                    # event on which the trigger performed
-        -
-            event: update                                    # event on which the trigger performed
-            field: asignee                                # field name to listen
-            priority: 10                                     # priority of the job queue
-            queued: true                                     # this process must be executed in queue
-            time_shift: 60                                   # this process must be executed with 60 seconds delay
-        -
-            event: update                                    # event on which the trigger performed
-            field: reporter                                # field name to listen
-            priority: 10                                     # priority of the job queue
-            queued: true                                     # this process must be executed in queue
-            time_shift: 60                                   # this process must be executed with 60 seconds delay
+            event: create

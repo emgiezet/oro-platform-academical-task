@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!-- http://phpunit.de/manual/4.8/en/appendixes.configuration.html -->
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/4.8/phpunit.xsd"
@@ -12,57 +11,26 @@
             <group>soap</group>
         </exclude>
     </groups>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">src/*</directory>
+            <exclude>
+                <directory suffix="Test.php">src/*/*Bundle/Tests/Unit</directory>
+                <directory suffix="Trait.php">src/*/*Bundle/Tests/Unit</directory>
+                <directory suffix=".php">src/*/*Bundle/Migrations</directory>
+                <directory suffix="Test.php">src/*/*Bundle/Tests/Functional</directory>
+                <file>/path/to/file</file>
+            </exclude>
+        </whitelist>
+    </filter>
     <testsuites>
         <testsuite name="unit">
-            <directory suffix="Test.php">vendor/oro/platform*/src/*/Bundle/*Bundle/Tests/Unit</directory>
-            <directory suffix="Test.php">vendor/oro/platform*/src/*/Component/*/Tests/Unit</directory>
+            <directory suffix="Test.php">src/*/*Bundle/Tests/Unit</directory>
         </testsuite>
         <testsuite name="functional">
-            <directory suffix="Test.php">vendor/oro/platform*/src/*/Bundle/*Bundle/Tests/Functional</directory>
-            <directory suffix="Test.php">vendor/oro/platform*/src/*/Component/*/Tests/Functional</directory>
-        </testsuite>
-        <testsuite name="functional-1-of-4">
-            <directory suffix="Test.php">vendor/oro/platform/src/*/Bundle/A*Bundle/Tests/Functional</directory>
-        </testsuite>
-        <testsuite name="functional-2-of-4">
-            <directory suffix="Test.php">vendor/oro/platform/src/*/Bundle/D*Bundle/Tests/Functional</directory>
-        </testsuite>
-        <testsuite name="functional-3-of-4">
-            <directory suffix="Test.php">vendor/oro/platform/src/*/Bundle/B*Bundle/Tests/Functional</directory>
-            <directory suffix="Test.php">vendor/oro/platform/src/*/Bundle/C*Bundle/Tests/Functional</directory>
-            <directory suffix="Test.php">vendor/oro/platform/src/*/Bundle/E*Bundle/Tests/Functional</directory>
-            <directory suffix="Test.php">vendor/oro/platform/src/*/Bundle/F*Bundle/Tests/Functional</directory>
-            <directory suffix="Test.php">vendor/oro/platform/src/*/Bundle/G*Bundle/Tests/Functional</directory>
-            <directory suffix="Test.php">vendor/oro/platform/src/*/Bundle/H*Bundle/Tests/Functional</directory>
-            <directory suffix="Test.php">vendor/oro/platform/src/*/Bundle/I*Bundle/Tests/Functional</directory>
-            <directory suffix="Test.php">vendor/oro/platform/src/*/Bundle/J*Bundle/Tests/Functional</directory>
-            <directory suffix="Test.php">vendor/oro/platform/src/*/Bundle/K*Bundle/Tests/Functional</directory>
-            <directory suffix="Test.php">vendor/oro/platform/src/*/Bundle/L*Bundle/Tests/Functional</directory>
-            <directory suffix="Test.php">vendor/oro/platform/src/*/Bundle/M*Bundle/Tests/Functional</directory>
-            <directory suffix="Test.php">vendor/oro/platform/src/*/Bundle/N*Bundle/Tests/Functional</directory>
-            <directory suffix="Test.php">vendor/oro/platform/src/*/Bundle/O*Bundle/Tests/Functional</directory>
-            <directory suffix="Test.php">vendor/oro/platform/src/*/Bundle/P*Bundle/Tests/Functional</directory>
-            <directory suffix="Test.php">vendor/oro/platform/src/*/Bundle/Q*Bundle/Tests/Functional</directory>
-            <directory suffix="Test.php">vendor/oro/platform/src/*/Bundle/R*Bundle/Tests/Functional</directory>
-        </testsuite>
-        <testsuite name="functional-4-of-4">
-            <directory suffix="Test.php">vendor/oro/platform/src/*/Bundle/S*Bundle/Tests/Functional</directory>
-            <directory suffix="Test.php">vendor/oro/platform/src/*/Bundle/T*Bundle/Tests/Functional</directory>
-            <directory suffix="Test.php">vendor/oro/platform/src/*/Bundle/U*Bundle/Tests/Functional</directory>
-            <directory suffix="Test.php">vendor/oro/platform/src/*/Bundle/V*Bundle/Tests/Functional</directory>
-            <directory suffix="Test.php">vendor/oro/platform/src/*/Bundle/W*Bundle/Tests/Functional</directory>
-            <directory suffix="Test.php">vendor/oro/platform/src/*/Bundle/X*Bundle/Tests/Functional</directory>
-            <directory suffix="Test.php">vendor/oro/platform/src/*/Bundle/Y*Bundle/Tests/Functional</directory>
-            <directory suffix="Test.php">vendor/oro/platform/src/*/Bundle/Z*Bundle/Tests/Functional</directory>
-            <directory suffix="Test.php">vendor/oro/platform-*/src/*/Bundle/*Bundle/Tests/Functional</directory>
-            <directory suffix="Test.php">vendor/oro/*/src/*/Component/*/Tests/Functional</directory>
-        </testsuite>
-        <testsuite name="selenium">
-            <directory suffix="Test.php">vendor/oro/platform*/src/*/Bundle/*Bundle/Tests/Selenium</directory>
-            <directory suffix="Test.php">vendor/oro/platform*/src/*/Component/*/Tests/Selenium</directory>
+            <directory suffix="Test.php">src/*/*Bundle/Tests/Functional</directory>
         </testsuite>
     </testsuites>
-
     <listeners>
         <listener class="JohnKary\PHPUnit\Listener\SpeedTrapListener"/>
         <listener class="MyBuilder\PhpunitAccelerator\TestListener"/>
@@ -74,7 +42,7 @@
     </listeners>
 
     <php>
-        <server name="KERNEL_DIR" value="app/"/>
+        <server name="KERNEL_DIR" value="/home/mgz/Documents/workspace/academical/app/"/>
         <const name="PHPUNIT_LOAD_LIMIT" value="1.2"/>
         <const name="PHPUNIT_PAGE_LIMIT" value="0.5"/>
         <const name="PHPUNIT_TESTSUITE_BROWSER_PATH_WINNT" value="C:\Dev\phantomjs-1.9.0-windows\phantomjs.exe"/>

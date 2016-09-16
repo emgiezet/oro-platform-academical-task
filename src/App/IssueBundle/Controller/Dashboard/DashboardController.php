@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\IssueBundle\Controller\Dashboard;
-
 
 use Oro\Bundle\WorkflowBundle\Entity\WorkflowStep;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -11,16 +9,17 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class DashboardController extends Controller
 {
-
     /**
      * @Route(
      *      "/dashboard/widgets/issues/{widget}",
-     *      name="issues.issues_by_status_chart",
+     *      name="app_issues_by_status_chart",
      *      requirements={"widget"="[\w-]+"},
      *      options={"expose"=true}
      * )
-     * @Template("IssueBundle:Dashboard:issuesByStatusChart.html.twig")
+     * @Template("IssueBundle:Dashboard:chart_issues_types_widget.html.twig")
+     *
      * @param $widget
+     *
      * @return array
      */
     public function issuesByStatusChartAction($widget)
@@ -38,7 +37,7 @@ class DashboardController extends Controller
         /** @var WorkflowStep $step */
         foreach ($steps as $step) {
             $count = $this->getDoctrine()
-                ->getRepository('App\IssueBundle:Issue')
+                ->getRepository('IssueBundle:Issue')
                 ->createQueryBuilder('i')
                 ->select('count(i.id) as issues_count')
                 ->where('i.workflowStep = :step')
@@ -48,7 +47,7 @@ class DashboardController extends Controller
 
             $data[] = [
                 'label' => $step->getLabel(),
-                'issues_count' => $count
+                'issues_count' => $count,
             ];
         }
 
@@ -61,7 +60,7 @@ class DashboardController extends Controller
                     'name' => 'bar_chart',
                     'data_schema' => [
                         'label' => ['field_name' => 'label'],
-                        'value' => ['field_name' => 'issues_count']
+                        'value' => ['field_name' => 'issues_count'],
                     ],
                     'settings' => ['xNoTicks' => count($data)],
                 ]

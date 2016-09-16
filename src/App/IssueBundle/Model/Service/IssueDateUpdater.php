@@ -17,8 +17,8 @@ class IssueDateUpdater
     {
         $this->tokenStorage = $tokenStorage;
     }
-    
-    public function populateCreationAndUpdateStamps(Issue $issue)
+
+    public function updateStamps(Issue $issue)
     {
         if ($issue->getId() < 1) {
             $issue->setCreated(new \DateTime('now'));
