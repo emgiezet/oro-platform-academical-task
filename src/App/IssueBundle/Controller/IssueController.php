@@ -46,28 +46,15 @@ class IssueController extends Controller
      *
      * @return array
      */
-    private function update(Issue $issue, Request $request, $parent = null)
+    private function update(Issue $issue, Request $request)
     {
         $em = $this->getDoctrine()->getManager();
         $form = $this->createForm(new IssueType(), $issue);
         $form->handleRequest($request);
+        $issue = $form->getData();
         if ($form->isSubmitted() && $form->isValid()) {
-            /*
-             * @var Issue
-             */
-            $data = $form->getData();
-            $em->persist($data);
-            if ($parent instanceof Issue) {
-                /**
-                 * @var $parent Issue
-                 */
-                $data->setParent($parent);
-                $data->setType(Issue::TYPE_SUBTASK);
-                $parent->addChild($data);
-            }
-            $em->persist($data);
 
-
+            $em->persist($issue);
             $em->flush();
 
             return $this->get('oro_ui.router')->redirectAfterSave(
@@ -122,12 +109,11 @@ class IssueController extends Controller
      */
     public function createSubtaskAction(Issue $issue, Request $request)
     {
-
         if ($issue->getType() === Issue::TYPE_STORY) {
             $subtask = new Issue();
             $subtask->setType(Issue::TYPE_SUBTASK);
             $subtask->setParent($issue);
-            return $this->update($subtask, $request, $issue);
+            return $this->update($subtask, $request);
         } else {
             return $this->redirectToRoute('app_issue_view', ['id' => $issue->getId()]);
         }

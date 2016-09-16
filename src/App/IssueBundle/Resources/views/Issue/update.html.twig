@@ -36,8 +36,8 @@
         {% set breadcrumbs = {
         'entity': issue,
         'indexPath': path('app_issue_index'),
-        'indexLabel': 'Issues',
-        'entityTitle': issue.summary
+        'indexLabel': 'app.issue.entity_label_plural'|trans,
+        'entityTitle': issue.code
         } %}
         {{ parent() }}
     {% else %}
@@ -48,30 +48,50 @@
 
 {% block content_data %}
     {% set id = 'issue-edit' %}
-    {% set dataBlocks = [{
-        'title': 'General'|trans,
-        'class': 'active',
-        'subblocks': [{
-            'title': '',
-            'data': [
-            form_row(form.summary),
-            form_row(form.description),
-            form_row(form.asignee),
-            form_row(form.priority),
-            form_row(form.type),
-            form_row(form.relatedIssues),
-            ]
-        }]
-    }]
+
+    {% set formFields = [
+        form_row(form.summary),
+        form_row(form.description),
+        form_row(form.asignee),
+        form_row(form.priority),
+        form_row(form.type),
+        form_row(form.relatedIssues)]
     %}
 
-    {# the data variable is a special variable that is used in the
-       parent content_data block to render the visual content "blocks"
-       of a page #}
-    {% set data = {
-        'formErrors': form_errors(form) ? form_errors(form) : null,
-        'dataBlocks': dataBlocks,
-    } %}
+    {% if entity.parent %}
+    {% set formFields = [form_row(form.parent)]|merge(formFields) %}
+    {% endif %}
 
+    {% if not entity.parent %}
+        {% set formFields = [form_row(form.type)]|merge(formFields) %}
+    {% endif %}
+    {% set dataBlocks = [{
+    'title': 'General'|trans,
+    'class': 'active',
+    'subblocks': [{
+    'title': '',
+    'data': formFields
+    }]
+    }]
+    %}
+    {% set additionalData = [] %}
+    {% for child in form.children if child.vars.extra_field is defined and child.vars.extra_field %}
+        {% set additionalData = additionalData|merge([form_row(child)]) %}
+    {% endfor %}
+    {% if additionalData is not empty %}
+        {% set dataBlocks = dataBlocks|merge([{
+        'title': 'Additional'|trans,
+        'subblocks': [{
+        'title': '',
+        'useSpan': false,
+        'data' : additionalData
+        }]
+        }] ) %}
+    {% endif %}
+
+    {% set data = {
+    'formErrors': form_errors(form)? form_errors(form) : null,
+    'dataBlocks': dataBlocks,
+    } %}
     {{ parent() }}
 {% endblock content_data %}

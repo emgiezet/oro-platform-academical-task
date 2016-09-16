@@ -2,6 +2,7 @@
 {% import 'OroUIBundle::macros.html.twig' as UI %}
 {% import 'OroUserBundle::macros.html.twig' as U %}
 {% import 'OroEntityConfigBundle::macros.html.twig' as entityConfig %}
+{% oro_title_set({params : {"%entity.code%": entity.code|default('N/A') }}) %}
 {% block navButtons %}
     {% if editRoute is defined %}
         {{ UI.editButton({
@@ -38,20 +39,20 @@
         }]
         } %}
     {% else %}
-    {% if entity.id %}
         {% set breadcrumbs = {
-        'entity': entity,
-        'indexPath': path('app_issue_index'),
-        'indexLabel': 'Issues',
-        'entityTitle': entity.summary
+        'entity':      entity,
+        'indexPath':   path('app_issue_index'),
+        'indexLabel': 'app.issue.entity_label_plural'|trans,
+        'entityTitle': entity.summary,
         } %}
-        {{ parent() }}
-    {% else %}
-        {% set title = 'oro.ui.create_entity'|trans({ '%entityName%': 'Issue' }) %}
-        {{  include('OroUIBundle::page_title_block.html.twig', { title: title }) }}
     {% endif %}
-    {% endif %}
+
+    {{ parent() }}
 {% endblock pageHeader %}
+
+{% block breadcrumbs %}
+    {{ parent() }}
+{% endblock breadcrumbs %}
 
 {% block stats %}
     <li>{{ 'oro.ui.created_at'|trans }}: {{ entity.created ? entity.created|oro_format_datetime : 'N/A' }}</li>
