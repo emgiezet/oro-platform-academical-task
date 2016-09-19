@@ -7,13 +7,14 @@
  */
 namespace App\IssueBundle\Tests\Controller;
 
+use App\IssueBundle\Entity\Issue;
 use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
 
 class IssueControllerTest extends WebTestCase
 {
     protected function setUp()
     {
-        $this->initClient(array(), $this->generateBasicAuthHeader());
+        $this->initClient([], array_merge($this->generateBasicAuthHeader(), ['HTTP_X-CSRF-Header' => 1]));
     }
 
     public function testCreate()
@@ -31,5 +32,38 @@ class IssueControllerTest extends WebTestCase
         $result = $this->client->getResponse();
         $this->assertHtmlResponseStatusCodeEquals($result, 200);
         $this->assertContains('Issue saved', $crawler->html());
+    }
+
+
+    public function testView()
+    {
+        $issue = $this->getIssue();
+
+        if (!$issue) {
+            throw new \RuntimeException(
+                'No issue found in database that can be used for testing.'
+            );
+        }
+
+        $this->client->request(
+            'GET',
+            $this->getUrl('app_issue_view', array('id' => $issue->getId()))
+        );
+
+        $result = $this->client->getResponse();
+
+        $this->assertHtmlResponseStatusCodeEquals($result, 200);
+
+        $this->assertContains($issue->getCode(), $result->getContent());
+        $this->assertContains(Issue::$typeArray[$issue->getType()], $result->getContent());
+        $this->assertContains(
+            $issue->getPriority()->getName(),
+            $result->getContent()
+        );
+    }
+
+    public function getIssue()
+    {
+        return $this->getContainer()->get('doctrine.orm.entity_manager')->getRepository('IssueBundle:Issue')->findOneBy([]);
     }
 }

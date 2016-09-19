@@ -140,12 +140,13 @@ class IssueController extends Controller
      *     requirements={"id"="\d+"})
      * @Template
      */
-    public function createIssueForUserAction(User $assignee, Request $request)
+    public function createIssueForUserAction(User $asignee, Request $request)
     {
+
         $currentUser = $this->get('security.context')->getToken()->getUser();
 
         $issue = new Issue();
-        $issue->setAsignee($assignee);
+        $issue->setAsignee($asignee);
         $issue->setOwner($currentUser);
 
         /*

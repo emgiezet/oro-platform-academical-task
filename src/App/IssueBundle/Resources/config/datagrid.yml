@@ -138,7 +138,7 @@ datagrid:
                 status:
                     data_name: workflowStep.stepOrder
             default:
-                priority: DESC
+                updated : DESC
         filters:
             columns:
                 code:

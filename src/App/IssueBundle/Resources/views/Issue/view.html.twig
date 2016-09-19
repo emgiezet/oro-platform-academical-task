@@ -123,7 +123,7 @@
 
                 {% for relatedIssue in entity.relatedIssues %}
                     {%- set relatedIssueData -%}
-                        {{ UI.entityViewLink(relatedIssue, relatedIssue.label, 'app_issue_view') }}
+                        {{ UI.entityViewLink(relatedIssue, relatedIssue.code, 'app_issue_view') }}
                     {%- endset %}
                     {% set relatedIssuesData = relatedIssuesData|merge([relatedIssueData]) %}
                 {% endfor %}
@@ -143,9 +143,6 @@
 
                 {{ UI.renderHtmlProperty('app.issue.collaborators.label'|trans,  UI.renderList(collaboratorsData)) }}
             {% endif %}
-
-            {{ entityConfig.renderDynamicFields(entity) }}
-            {#{{ TAG.renderView(entity) }}#}
         </div>
         <div class="responsive-block">
         {{ entityConfig.renderDynamicFields(entity) }}

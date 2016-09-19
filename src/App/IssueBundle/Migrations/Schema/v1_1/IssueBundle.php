@@ -32,7 +32,7 @@ class IssueBundle implements Migration, NoteExtensionAwareInterface, OrderedMigr
 
     public function up(Schema $schema, QueryBag $queries)
     {
-        //        $this->activityExtension->addActivityAssociation($schema, 'oro_email', 'app_issue');
+        $this->activityExtension->addActivityAssociation($schema, 'oro_email', 'app_issue');
         $this->noteExtension->addNoteAssociation($schema, 'app_issue');
     }
 
