@@ -1,6 +1,6 @@
 <?php
 
-namespace IssuesBundle\ImportExport\Serializer\Normalizer;
+namespace App\IssueBundle\ImportExport\Serializer\Normalizer;
 
 use Oro\Bundle\ImportExportBundle\Serializer\Normalizer\ConfigurableEntityNormalizer;
 

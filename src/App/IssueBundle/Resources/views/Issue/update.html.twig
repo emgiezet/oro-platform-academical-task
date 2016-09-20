@@ -36,12 +36,12 @@
 {% endblock navButtons %}
 
 {% block pageHeader %}
-    {% if issue.id %}
+    {% if entity.id %}
         {% set breadcrumbs = {
         'entity': issue,
         'indexPath': path('app_issue_index'),
         'indexLabel': 'app.issue.entity_label_plural'|trans,
-        'entityTitle': issue.code
+        'entityTitle': entity.code~' - '~entity.summary
         } %}
         {{ parent() }}
     {% else %}

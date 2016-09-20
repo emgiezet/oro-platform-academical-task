@@ -52,9 +52,9 @@ class IssueFixture extends AbstractTemplateRepository implements TemplateFixture
                 $entity->setCode('TEST-123');
                 $entity->setSummary('Fill Summary');
                 $entity->setDescription('Fill Description');
-                $entity->setCreatedAt(new \DateTime());
-                $entity->setAssignee($userRepo->getEntity('John Doe'));
-                $entity->setReporter($userRepo->getEntity('John Doe'));
+                $entity->setCreated(new \DateTime());
+                $entity->setAsignee($userRepo->getEntity('John Doo'));
+                $entity->setReporter($userRepo->getEntity('John Doo'));
                 $entity->setType(Issue::TYPE_BUG);
                 $entity->setOrganization($organizationRepo->getEntity('default'));
 

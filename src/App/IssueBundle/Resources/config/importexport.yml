@@ -24,14 +24,14 @@ services:
         calls:
              - [setDataConverter, ['@issue_bundle.importexport.data_converter.issue']]
         tags:
-            - { name: oro_importexport.processor, type: export, entity: "App\IssueBundle\Entity\Issue", alias: issues }
+            - { name: oro_importexport.processor, type: export, entity: "App\IssueBundle\Entity\Issue", alias: issue }
 
     issue_bundle.importexport.export_processor.template.issue:
         parent: oro_importexport.processor.export_abstract
         calls:
             - [setDataConverter, ['@issue_bundle.importexport.template_fixture.data_converter.issue']]
         tags:
-            - { name: oro_importexport.processor, type: export_template, entity: "App\IssueBundle\Entity\Issue", alias: issues }
+            - { name: oro_importexport.processor, type: export_template, entity: "App\IssueBundle\Entity\Issue", alias: issue }
 
     # Import Strategy
     issue_bundle.importexport.strategy.issues.add_or_replace:

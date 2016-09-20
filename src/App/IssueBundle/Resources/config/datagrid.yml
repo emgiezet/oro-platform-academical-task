@@ -165,10 +165,6 @@ datagrid:
                 status:
                     type: choice
                     data_name: workflowStepId
-#                    options:
-#                        field_options:
-#                            multiple: true
-#                            choices: "@issue.model.provider.statuses->getStatusesArray"
         options:
             entityHint: issue
             export:

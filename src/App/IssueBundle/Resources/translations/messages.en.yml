@@ -25,6 +25,9 @@ app.add_dialog.button_label: 'Create task for user'
 app.user_view.issues_assigned_and_reported.title: 'Issues that user contributed to'
 app.issue.flashMessages.create.success: 'Issue Created'
 app.issue.flashMessages.delete.success: 'Issue Deleted'
+app.issue.created.label: 'Created at'
+app.issue.id.label: 'Id'
+app.issue.updated.label: 'Updated at'
 Cancel: Cancel
 Save: Save
 issue: issue
