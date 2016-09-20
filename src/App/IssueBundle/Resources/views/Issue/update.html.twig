@@ -62,21 +62,22 @@
         form_row(form.relatedIssues)]
     %}
 
-    {% if entity.parent %}
+    {% if entity.parent|default(false) %}
     {% set formFields = [form_row(form.parent)]|merge(formFields) %}
     {% endif %}
 
-    {% if not entity.parent %}
+    {% if not entity.parent|default(false) %}
         {% set formFields = [form_row(form.type)]|merge(formFields) %}
     {% endif %}
+
     {% set dataBlocks = [{
-    'title': 'General'|trans,
-    'class': 'active',
-    'subblocks': [{
-    'title': '',
-    'data': formFields
-    }]
-    }]
+        'title': 'General'|trans,
+        'class': 'active',
+        'subblocks': [{
+            'title': '',
+            'data': formFields
+        }]
+        }]
     %}
     {% set additionalData = [] %}
     {% for child in form.children if child.vars.extra_field is defined and child.vars.extra_field %}

@@ -5,7 +5,6 @@ namespace App\IssueBundle\Controller;
 use App\IssueBundle\Entity\Issue;
 use App\IssueBundle\Entity\Resolution;
 use App\IssueBundle\Form\Type\IssueType;
-use Doctrine\Common\Proxy\Exception\OutOfBoundsException;
 use Oro\Bundle\UserBundle\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -24,7 +23,7 @@ class IssueController extends Controller
      */
     public function indexAction()
     {
-        return array('entity_class'=>'App\IssueBundle\Entity\Issue');
+        return array('entity_class' => 'App\IssueBundle\Entity\Issue');
     }
 
     /**
@@ -127,8 +126,6 @@ class IssueController extends Controller
     public function deleteAction($id)
     {
         try {
-
-
             if ($this->get('issue.model.issue_soft_deleter')->deleteIssueById($id)) {
                 $this->addFlash(
                     'success',
@@ -136,12 +133,11 @@ class IssueController extends Controller
                         ->trans('app.issue.flashMessages.delete.success')
                 );
             }
+
             return $this->redirectToRoute('app_issue_index');
         } catch (\OutOfBoundsException $exception) {
             throw new NotFoundHttpException('Issue not found');
         }
-
-
     }
 
     /**
@@ -151,7 +147,6 @@ class IssueController extends Controller
      */
     public function createIssueForUserAction(User $asignee, Request $request)
     {
-
         $currentUser = $this->get('security.context')->getToken()->getUser();
 
         $issue = new Issue();

@@ -5,14 +5,10 @@ namespace IssuesBundle\ImportExport\Serializer\Normalizer;
 use Oro\Bundle\ImportExportBundle\Serializer\Normalizer\ConfigurableEntityNormalizer;
 
 /**
- * Class IssueNormalizer
- * @package IssuesBundle\ImportExport\Serializer\Normalizer
+ * Class IssueNormalizer.
  */
 class IssueNormalizer extends ConfigurableEntityNormalizer
 {
-    /**
-     *
-     */
     const ENTITY_CLASS = 'App\IssueBundle\Entity\Issue';
 
     /**
@@ -25,6 +21,7 @@ class IssueNormalizer extends ConfigurableEntityNormalizer
         if (isset($result['deleted'])) {
             $result['deleted'] = $result['deleted'] ? 'yes' : 'no';
         }
+
         return $result;
     }
 

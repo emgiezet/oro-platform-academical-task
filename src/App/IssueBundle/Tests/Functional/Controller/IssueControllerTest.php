@@ -34,7 +34,6 @@ class IssueControllerTest extends WebTestCase
         $this->assertContains('Issue saved', $crawler->html());
     }
 
-
     public function testView()
     {
         $issue = $this->getIssue();

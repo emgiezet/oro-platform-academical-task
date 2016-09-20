@@ -12,7 +12,7 @@ class SaveNoteAuthorAsCollaboratorTest extends \PHPUnit_Framework_TestCase
 {
     public function testUpdatesStamp()
     {
-        /**
+        /*
          * @var ContextAccessor
          */
         $contextAccessor = $this->getMockBuilder(
@@ -21,7 +21,7 @@ class SaveNoteAuthorAsCollaboratorTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        /**
+        /*
          * @var IssueUpdateStamp
          */
         $issueUpdateStamp = $this->getMockBuilder(
@@ -33,7 +33,7 @@ class SaveNoteAuthorAsCollaboratorTest extends \PHPUnit_Framework_TestCase
         $issueUpdateStamp->expects($this->atLeastOnce())
             ->method('updateStamps');
 
-        /**
+        /*
          * @var CollaboratorsCollector
          */
         $CollaboratorsCollector = $this->getMockBuilder(
@@ -42,7 +42,7 @@ class SaveNoteAuthorAsCollaboratorTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        /**
+        /*
          * @var TokenStorageInterface
          */
         $tokenStorage = $this->getMockBuilder(
@@ -58,7 +58,7 @@ class SaveNoteAuthorAsCollaboratorTest extends \PHPUnit_Framework_TestCase
             $tokenStorage
         );
 
-        /**
+        /*
          * @var Symfony\Component\EventDispatcher\EventDispatcherInterface
          */
         $eventDispatcher = $this->getMockBuilder(
@@ -95,7 +95,7 @@ class SaveNoteAuthorAsCollaboratorTest extends \PHPUnit_Framework_TestCase
 
     public function testUpdatesCollaborators()
     {
-        /**
+        /*
          * @var ContextAccessor
          */
         $contextAccessor = $this->getMockBuilder(
@@ -104,7 +104,7 @@ class SaveNoteAuthorAsCollaboratorTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        /**
+        /*
          * @var IssueUpdateStamp
          */
         $issueUpdateStamp = $this->getMockBuilder(
@@ -113,7 +113,7 @@ class SaveNoteAuthorAsCollaboratorTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        /**
+        /*
          * @var Collaboration
          */
         $collaboration = $this->getMockBuilder(
@@ -125,7 +125,7 @@ class SaveNoteAuthorAsCollaboratorTest extends \PHPUnit_Framework_TestCase
         $collaboration->expects($this->atLeastOnce())
             ->method('updateCollaborators');
 
-        /**
+        /*
          * @var TokenStorageInterface
          */
         $tokenStorage = $this->getMockBuilder(
@@ -156,7 +156,7 @@ class SaveNoteAuthorAsCollaboratorTest extends \PHPUnit_Framework_TestCase
             $tokenStorage
         );
 
-        /**
+        /*
          * @var Symfony\Component\EventDispatcher\EventDispatcherInterface
          */
         $eventDispatcher = $this->getMockBuilder(

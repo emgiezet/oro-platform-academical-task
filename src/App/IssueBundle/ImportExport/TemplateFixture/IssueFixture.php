@@ -7,8 +7,7 @@ use Oro\Bundle\ImportExportBundle\TemplateFixture\AbstractTemplateRepository;
 use Oro\Bundle\ImportExportBundle\TemplateFixture\TemplateFixtureInterface;
 
 /**
- * Class IssueFixture
- * @package App\IssueBundle\ImportExport\TemplateFixture
+ * Class IssueFixture.
  */
 class IssueFixture extends AbstractTemplateRepository implements TemplateFixtureInterface
 {
@@ -37,8 +36,8 @@ class IssueFixture extends AbstractTemplateRepository implements TemplateFixture
     }
 
     /**
-     * @param string  $key
-     * @param Issue $entity
+     * @param string $key
+     * @param Issue  $entity
      */
     public function fillEntityData($key, $entity)
     {

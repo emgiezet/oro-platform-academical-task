@@ -12,7 +12,7 @@ class IssuesPersistingListenerTest extends \PHPUnit_Framework_TestCase
 {
     public function testHandlesIssueWhenPersist()
     {
-        /**
+        /*
          * @var IssueUpdateStamp
          */
         $issueUpdateStamp = $this->getMockBuilder('App\IssueBundle\Model\Service\IssueDateUpdater')
@@ -22,7 +22,7 @@ class IssuesPersistingListenerTest extends \PHPUnit_Framework_TestCase
         $issueUpdateStamp->expects($this->atLeastOnce())
             ->method('updateStamps');
 
-        /**
+        /*
          * @var IssueCodeGenerator
          */
         $issueCodeGenerator = $this->getMockBuilder('App\IssueBundle\Model\Service\IssueCodeGenerator')
@@ -32,7 +32,7 @@ class IssuesPersistingListenerTest extends \PHPUnit_Framework_TestCase
         $issueCodeGenerator->expects($this->atLeastOnce())
             ->method('populateCode');
 
-        /**
+        /*
          * @var Collaboration
          */
         $collaboration = $this->getMockBuilder('App\IssueBundle\Model\Service\CollaboratorsCollector')
@@ -80,7 +80,7 @@ class IssuesPersistingListenerTest extends \PHPUnit_Framework_TestCase
 
     public function testHandlesIssueWhenUpdate()
     {
-        /**
+        /*
          * @var IssueUpdateStamp
          */
         $issueUpdateStamp = $this->getMockBuilder('App\IssueBundle\Model\Service\IssueDateUpdater')
@@ -90,7 +90,7 @@ class IssuesPersistingListenerTest extends \PHPUnit_Framework_TestCase
         $issueUpdateStamp->expects($this->atLeastOnce())
             ->method('updateStamps');
 
-        /**
+        /*
          * @var IssueCodeGenerator
          */
         $issueCodeGenerator = $this->getMockBuilder('App\IssueBundle\Model\Service\IssueCodeGenerator')
@@ -100,7 +100,7 @@ class IssuesPersistingListenerTest extends \PHPUnit_Framework_TestCase
         $issueCodeGenerator->expects($this->atLeastOnce())
             ->method('populateCode');
 
-        /**
+        /*
          * @var CollaboratorsCollector
          */
         $collaboratorsCollector = $this->getMockBuilder('App\IssueBundle\Model\Service\CollaboratorsCollector')

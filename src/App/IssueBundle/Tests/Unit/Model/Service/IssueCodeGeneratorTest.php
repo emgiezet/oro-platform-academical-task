@@ -22,7 +22,7 @@ class IssueCodeGeneratorTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $query =$this->getMockBuilder('\StdClass')->setMethods(array('getSingleResult'))->getMock();
+        $query = $this->getMockBuilder('\StdClass')->setMethods(array('getSingleResult'))->getMock();
 
         foreach ($entityManagerChainMethods as $method) {
             $entityManager->expects($this->any())
