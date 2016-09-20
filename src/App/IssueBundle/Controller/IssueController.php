@@ -24,7 +24,7 @@ class IssueController extends Controller
      */
     public function indexAction()
     {
-        return array();
+        return array('entity_class'=>'App\IssueBundle\Entity\Issue');
     }
 
     /**

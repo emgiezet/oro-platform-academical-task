@@ -1,0 +1,48 @@
+services:
+    issue_bundle.importexport.template_fixture.issue:
+        class: App\IssueBundle\ImportExport\TemplateFixture\IssueFixture
+        tags:
+            - { name: oro_importexport.template_fixture }
+
+    # Normalizer
+    issue_bundle.importexport.normalizer.issue:
+        class: App\IssueBundle\ImportExport\Serializer\Normalizer\IssueNormalizer
+        parent: oro_importexport.serializer.configurable_entity_normalizer
+        tags:
+            - { name: oro_importexport.normalizer }
+
+    # Converter
+    issue_bundle.importexport.data_converter.issue:
+        parent: oro_importexport.data_converter.configurable
+
+    issue_bundle.importexport.template_fixture.data_converter.issue:
+        parent: oro_importexport.data_converter.template_fixture.configurable
+
+    # Export Processor
+    issue_bundle.importexport.export_processor.issue:
+        parent: oro_importexport.processor.export_abstract
+        calls:
+             - [setDataConverter, ['@issue_bundle.importexport.data_converter.issue']]
+        tags:
+            - { name: oro_importexport.processor, type: export, entity: "App\IssueBundle\Entity\Issue", alias: issues }
+
+    issue_bundle.importexport.export_processor.template.issue:
+        parent: oro_importexport.processor.export_abstract
+        calls:
+            - [setDataConverter, ['@issue_bundle.importexport.template_fixture.data_converter.issue']]
+        tags:
+            - { name: oro_importexport.processor, type: export_template, entity: "App\IssueBundle\Entity\Issue", alias: issues }
+
+    # Import Strategy
+    issue_bundle.importexport.strategy.issues.add_or_replace:
+        parent: oro_importexport.strategy.configurable_add_or_replace
+
+    # Import processor
+    issue_bundle.importexport.processor.issues:
+        parent: oro_importexport.processor.import_abstract
+        calls:
+             - [setDataConverter, [@issue_bundle.importexport.data_converter.issue]]
+             - [setStrategy, [@issue_bundle.importexport.strategy.issues.add_or_replace]]
+        tags:
+            - { name: oro_importexport.processor, type: import, entity: "App\IssueBundle\Entity\Issue", alias: issue.add_or_replace_issue }
+            - { name: oro_importexport.processor, type: import_validation, entity: "App\IssueBundle\Entity\Issue", alias: issue.add_or_replace_issue }

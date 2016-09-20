@@ -1,12 +1,20 @@
 {% extends 'OroUIBundle:actions:index.html.twig' %}
-
+{% import 'OroUIBundle::macros.html.twig' as UI %}
 {% set gridName = 'app-issue-grid' %}
-{% set pageTitle = 'Issue' %}
+{% set pageTitle = 'app.issue.entity_plural_label'|trans %}
 {% block navButtons %}
+    {% include 'OroImportExportBundle:ImportExport:buttons.html.twig' with {
+    entity_class: entity_class,
+    exportProcessor: 'issue',
+    exportTemplateProcessor: 'issue',
+    importProcessor: 'issue.add_or_replace_issue ',
+    importTitle: 'app.issue.import_title'|trans,
+    dataGridName: gridName
+    } %}
     <div class="btn-group">
         {{ UI.addButton({
             'path': path('app_issue_create'),
-            'entity_label': 'Create a Issue',
+            'entity_label': 'oro.ui.create'|trans,
         }) }}
     </div>
 {% endblock %}

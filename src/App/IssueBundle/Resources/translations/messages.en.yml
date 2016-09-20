@@ -8,6 +8,7 @@ app.issue.type.label: Type
 app.issue.resolution.label: Resolution
 app.issue.resolution.entity_label: Resolution
 app.issue.status.label: Status
+app.issue.parent.label: 'Parent Task'
 app.issue.reporter.label: Reporter
 app.issue.asignee.label: Asignee
 app.issue.priority.label: Priority

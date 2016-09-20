@@ -4,6 +4,16 @@
 {% import 'OroEntityConfigBundle::macros.html.twig' as entityConfig %}
 {% oro_title_set({params : {"%entity.code%": entity.code|default('N/A') }}) %}
 {% block navButtons %}
+    {{ UI.buttonSeparator() }}
+    {{ UI.deleteButton({
+        'dataUrl': path('app_issue_delete', {'id': entity.id}),
+        'dataRedirect': path('app_issue_index'),
+        'aCss': 'no-hash remove-button',
+        'id': 'btn-remove-tag',
+        'dataId': entity.id,
+        'entity_label': 'app.issue.entity_label'|trans
+    }) }}
+    {{ UI.buttonSeparator() }}
     {% if editRoute is defined %}
         {{ UI.editButton({
             'path': path('app_issue_update', { id: entity.id }),
