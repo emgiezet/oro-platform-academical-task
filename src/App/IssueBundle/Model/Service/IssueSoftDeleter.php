@@ -26,6 +26,7 @@ class IssueSoftDeleter
      * @param $id
      *
      * @return bool
+     * @throws \OutOfBoundsException
      */
     public function deleteIssueById($id)
     {

@@ -22,7 +22,8 @@ app.issue.dashboard.issues_by_status_chart.title: 'Issues by Status Chart'
 app.add_dialog.title: 'Create a task'
 app.add_dialog.button_label: 'Create task for user'
 app.user_view.issues_assigned_and_reported.title: 'Issues that user contributed to'
-issues.issue.flashMessages.create.success: 'Issue Created'
+app.issue.flashMessages.create.success: 'Issue Created'
+app.issue.flashMessages.delete.success: 'Issue Deleted'
 Cancel: Cancel
 Save: Save
 issue: issue

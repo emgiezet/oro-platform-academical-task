@@ -57,6 +57,7 @@ datagrid:
                     link: view_link
                     rowAction: true
     app-issue-grid:
+        extended_entity_name: "App\IssueBundle\Entity\Issue"
         source:
             type: orm
             query:
@@ -232,11 +233,11 @@ datagrid:
                           - issue.deleted = false
           columns:
               code:
-                  label: issues.issue.code.label
+                  label: app.issue.code.label
               summary:
-                  label: issues.issue.summary.label
+                  label: app.issue.summary.label
               status:
-                  label: issues.issue.status.label
+                  label: app.issue.status.label
           sorters:
               columns:
                   code:

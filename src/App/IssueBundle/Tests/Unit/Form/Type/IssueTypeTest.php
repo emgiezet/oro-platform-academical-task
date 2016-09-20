@@ -24,7 +24,7 @@ class IssueTypeTest extends TypeTestCase
 
     protected function getExtensions()
     {
-        $this->validator = \PHPUnit_Framework_TestCase::createMock(
+        $this->validator = $this->getMock(
             'Symfony\Component\Validator\Validator\ValidatorInterface'
         );
 

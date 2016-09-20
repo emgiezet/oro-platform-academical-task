@@ -36,7 +36,7 @@ workflows:
                     - reopen
         attributes:
             resolution:
-                        label: issues.issue.resolution.label
+                        label: app.issue.resolution.label
                         type: entity
                         property_path: resolution
                         options:

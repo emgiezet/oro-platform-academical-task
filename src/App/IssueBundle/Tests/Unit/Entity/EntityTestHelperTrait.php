@@ -22,7 +22,7 @@ trait EntityTestHelperTrait
                     if ($params[0]->getClass()->getName() == 'DateTime') {
                         $value = new \DateTime('now');
                     } else {
-                        $value = $this->createMock($params[0]->getClass()->getName());
+                        $value = $this->getMock($params[0]->getClass()->getName());
                     }
                 }
 

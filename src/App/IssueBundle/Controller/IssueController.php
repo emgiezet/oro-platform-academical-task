@@ -5,11 +5,13 @@ namespace App\IssueBundle\Controller;
 use App\IssueBundle\Entity\Issue;
 use App\IssueBundle\Entity\Resolution;
 use App\IssueBundle\Form\Type\IssueType;
+use Doctrine\Common\Proxy\Exception\OutOfBoundsException;
 use Oro\Bundle\UserBundle\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @Route("/issue")
@@ -124,15 +126,22 @@ class IssueController extends Controller
      */
     public function deleteAction($id)
     {
-        if ($this->get('issues.model.issue_deletion')->deleteIssueById($id)) {
-            $this->addFlash(
-                'success',
-                $this->get('translator')
-                    ->trans('issues.issue.flashMessages.delete.success')
-            );
+        try {
+
+
+            if ($this->get('issue.model.issue_soft_deleter')->deleteIssueById($id)) {
+                $this->addFlash(
+                    'success',
+                    $this->get('translator')
+                        ->trans('app.issue.flashMessages.delete.success')
+                );
+            }
+            return $this->redirectToRoute('app_issue_index');
+        } catch (\OutOfBoundsException $exception) {
+            throw new NotFoundHttpException('Issue not found');
         }
 
-        return $this->redirectToRoute('issues.issues_index');
+
     }
 
     /**

@@ -6,7 +6,7 @@ use App\IssueBundle\Model\Service\IssueSoftDeleter;
 use Doctrine\ORM\EntityManager;
 use App\IssueBundle\Entity\Issue;
 
-class IssueDeletionTest extends \PHPUnit_Framework_TestCase
+class IssueSoftDeleterTest extends \PHPUnit_Framework_TestCase
 {
     public function testDeletesIssue()
     {
