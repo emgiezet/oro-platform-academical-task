@@ -1,6 +1,4 @@
 App\IssueBundle\Entity\Issue:
-    constraints:
-        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: code
     properties:
         summary:
             - NotBlank: ~

@@ -2,7 +2,7 @@
 {% import 'OroUIBundle::macros.html.twig' as UI %}
 {% import 'OroUserBundle::macros.html.twig' as U %}
 {% import 'OroEntityConfigBundle::macros.html.twig' as entityConfig %}
-{% oro_title_set({params : {"%entity.code%": entity.code|default('N/A') }}) %}
+{% oro_title_set({params : {"%code%": entity.code|default('N/A') }}) %}
 
 {% block navButtons %}
     {{ UI.buttonSeparator() }}

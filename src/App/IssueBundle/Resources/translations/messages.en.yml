@@ -14,6 +14,7 @@ app.issue.asignee.label: Asignee
 app.issue.priority.label: Priority
 app.issue.priority.entity_label: Priority
 app.issue.relatedIssues.label: 'Related Issues'
+app.issue.related_issues.label: 'Related Issues'
 app.issue.children.label: Subtasks
 app.issue.create_sutask: 'Create Subtask'
 app.issue.add_subtask: 'Create Subtask'
@@ -28,6 +29,10 @@ app.issue.flashMessages.delete.success: 'Issue Deleted'
 app.issue.created.label: 'Created at'
 app.issue.id.label: 'Id'
 app.issue.updated.label: 'Updated at'
+app.issue.menu.create.label: 'Create Issue'
+app.issue.menu.view.label: 'View Issue'
+app.issue.menu.update.label: 'Update Issue'
+app.issue.import_title: 'Import Issues'
 Cancel: Cancel
 Save: Save
 issue: issue

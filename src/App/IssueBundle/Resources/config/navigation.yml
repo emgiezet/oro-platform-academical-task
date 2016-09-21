@@ -1,9 +1,33 @@
 oro_menu_config:
     items:
         issue_list:
-            label: Issues
-            route: app_issue_index
+            label: 'app.issue.entity_plural_label'
+            route: 'app_issue_index'
+            extras:
+                position: 20
+                routes: ['app_issue*']
+        issue_create:
+            label: 'app.issue.menu.create.label'
+            route: 'app_issue_create'
+            extras:
+                isCustomAction: true
+        issue_view:
+            label: 'app.issue.menu.view.label'
+            route: 'app_issue_view'
+            extras:
+                isCustomAction: true
+        issue_update:
+            label: 'app.issue.menu.update.label'
+            route: 'app_issue_update'
+            extras:
+                isCustomAction: true
     tree:
         application_menu:
             children:
                 issue_list: ~
+oro_titles:
+    app_issue_index: 'Issues'
+    app_issue_view: 'Issue %%code%%'
+    app_issue_update: '%%code%% - Edit'
+    app_issue_create: 'Create Issue'
+    app_issue_create_subtask: 'Create Subtask for %%code%%'

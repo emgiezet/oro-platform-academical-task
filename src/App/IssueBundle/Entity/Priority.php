@@ -114,4 +114,22 @@ class Priority
     {
         return (string) $this->getLabel();
     }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getIssues()
+    {
+        return $this->issues;
+    }
+
+    /**
+     * @param ArrayCollection $issues
+     */
+    public function setIssues($issues)
+    {
+        $this->issues = $issues;
+    }
+
+
 }

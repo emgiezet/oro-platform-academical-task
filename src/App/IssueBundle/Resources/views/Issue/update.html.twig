@@ -1,7 +1,7 @@
 {% extends 'OroUIBundle:actions:update.html.twig' %}
 {% form_theme form with 'OroFormBundle:Form:fields.html.twig' %}
 {% set issue = form.vars.value %}
-{% oro_title_set({params : {"%entity.code%": entity.code|default('N/A') }}) %}
+{% oro_title_set({params : {"%code%": entity.code|default('N/A') }}) %}
 {# choose the appropriate action depending on whether a issue is created or modified #}
 {# this variable needs to be named formAction as this is what the base template expects #}
 {% if issue.id %}
@@ -45,7 +45,11 @@
         } %}
         {{ parent() }}
     {% else %}
-        {% set title = 'oro.ui.create_entity'|trans({ '%entityName%': 'Issue' }) %}
+        {% if entity.parent is not null %}
+            {% set title = 'oro.ui.create_entity'|trans({ '%entityName%': 'Issue '~entity.parent.code~' Subtask' }) %}
+        {% else %}
+            {% set title = 'oro.ui.create_entity'|trans({ '%entityName%': 'Issue' }) %}
+        {% endif %}
         {{  include('OroUIBundle::page_title_block.html.twig', { title: title }) }}
     {% endif %}
 {% endblock pageHeader %}
@@ -58,15 +62,14 @@
         form_row(form.description),
         form_row(form.asignee),
         form_row(form.priority),
-        form_row(form.type),
         form_row(form.relatedIssues)]
     %}
 
-    {% if entity.parent|default(false) %}
+    {% if entity.parent is null %}
     {% set formFields = [form_row(form.parent)]|merge(formFields) %}
     {% endif %}
 
-    {% if not entity.parent|default(false) %}
+    {% if not entity.parent is not null %}
         {% set formFields = [form_row(form.type)]|merge(formFields) %}
     {% endif %}
 

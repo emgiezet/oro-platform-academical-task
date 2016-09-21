@@ -203,6 +203,14 @@ datagrid:
                 label: oro.grid.action.delete
                 icon: trash
                 link: delete_link
+
+        mass_actions:
+            delete:
+                type: delete
+                entity_name: "App\IssueBundle\Entity\Issue"
+                data_identifier: issue.id
+                label: Delete
+                icon: trash
     user-view-issues-grid:
           options:
               entityHint: issue
